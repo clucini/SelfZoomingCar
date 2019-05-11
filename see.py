@@ -1,7 +1,6 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-from matplotlib import pyplot as  plt
 
 # Configure depth and color streams
 pipeline = rs.pipeline()
@@ -33,16 +32,18 @@ try:
         #hsv_blue = cv2.cvtColor((0,0,255), cv2.COLOR_BGR2HSV)
         hsv = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
 
-        edges = cv2.Canny(hsv, 400, 50, L2gradient=True)
+        edges = cv2.Canny(hsv, 500, 450)
+
+        
 
         mask = cv2.inRange(hsv, lower, upper)
-        o = cv2.bitwise_and(hsv, hsv, mask=mask)
+        #o = cv2.bitwise_and(hsv, hsv, mask=mask)
 
         # Show images
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('Edges', edges)
         cv2.imshow('Color', color_image)
-        cv2.imshow('mask', o)
+        cv2.imshow('mask', mask)
         #cv2.imshow('asdd', t)
         cv2.waitKey(1)
 
