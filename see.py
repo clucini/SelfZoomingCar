@@ -1,6 +1,7 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
+from matplotlib import pyplot as  plt
 
 # Configure depth and color streams
 pipeline = rs.pipeline()
@@ -10,6 +11,11 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 
 # Start streaming
 pipeline.start(config)
+
+im = cv2.imread('image.png')
+
+lower = (90, 100, 100)
+upper = (120,255,255)
 
 try:
     while True:
@@ -22,20 +28,25 @@ try:
 
         # Convert images to numpy arrays
         color_image = np.asanyarray(color_frame.get_data())
+    
 
-        # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
+        #hsv_blue = cv2.cvtColor((0,0,255), cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
 
-        edge_map = cv2.Laplacian(color_frame, cv2.CV_64F)
+        edges = cv2.Canny(hsv, 400, 50, L2gradient=True)
 
-        # Stack both images horizontally
-        images = np.hstack((color_image, edge_map))
+        mask = cv2.inRange(hsv, lower, upper)
+        o = cv2.bitwise_and(hsv, hsv, mask=mask)
 
         # Show images
-        cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('RealSense', images)
+        #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
+        cv2.imshow('Edges', edges)
+        cv2.imshow('Color', color_image)
+        cv2.imshow('mask', o)
+        #cv2.imshow('asdd', t)
         cv2.waitKey(1)
 
 finally:
 
     # Stop streaming
-    pipeline.stop()
+    pipeline.stop() 
