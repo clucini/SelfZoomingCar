@@ -13,7 +13,7 @@ pipeline.start(config)
 
 im = cv2.imread('image.png')
 
-lower = (90, 100, 100)
+lower = (90, 0, 0)
 upper = (120,255,255)
 
 try:
