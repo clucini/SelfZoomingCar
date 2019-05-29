@@ -5,10 +5,10 @@ import mraa
 import time
 
 # Use pin 7 by default
-pin_no = 33
+pin_no = 15
 
 # Export the GPIO pin for use
-pin = mraa.Gpio(pin_no)
+pin = mraa.Pwm(pin_no)
 
 # Small delay to allow udev rules to execute (necessary only on up)
 time.sleep(0.1)
