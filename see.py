@@ -1,6 +1,8 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
+import math
+import serialtest as st
 
 # Configure depth and color streams
 # Create a pipeline
@@ -9,8 +11,8 @@ pipeline = rs.pipeline()
 #Create a config and configure the pipeline to stream
 #  different resolutions of color and depth streams
 config = rs.config()
-config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.depth, 640, 360, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 360, rs.format.bgr8, 30)
 # Start streaming
 profile = pipeline.start(config)
 
@@ -19,15 +21,20 @@ depth_sensor = profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
 
 # Start streaming
+b_lower = (100, 100, 100)
+b_upper = (110,255,200)
 
-im = cv2.imread('image.png')
-
-lower = (90, 0, 0)
-upper = (120,255,255)
+y_lower = (20, 40, 0)
+y_upper = (30,255,255)
 
 align_to = rs.stream.color
 align = rs.align(align_to)
+angle_buf = []
 
+low_speed = 1560
+high_speed = 1575
+
+st.move(1565)
 try:
     while True:
 
@@ -46,37 +53,132 @@ try:
         color_image = np.asanyarray(color_frame.get_data())
     
 
+        color_image = cv2.blur(color_image,(3,3))
         
+        c2 = color_image.copy()
         depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
         
         hsv = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
 
-        mask = cv2.inRange(hsv, lower, upper)
-        o = cv2.bitwise_and(hsv, hsv, mask=mask)
+        y_mask = cv2.inRange(hsv, y_lower, y_upper)
+        b_mask = cv2.inRange(hsv, b_lower, b_upper)
+        y_result = cv2.bitwise_and(hsv, hsv, mask=y_mask)
+        b_result = cv2.bitwise_and(hsv, hsv, mask=b_mask)
         grey_color = 153
 
-        edges = cv2.Canny(color_image, 500, 200)
+        y_edges = cv2.Canny(y_result, 300, 200)
+        b_edges = cv2.Canny(b_result, 300, 200)
 
-        bg_removed = np.where((o < 10), grey_color, depth_image_3d)
-        depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(bg_removed, alpha=0.1), cv2.COLORMAP_JET)
+        minLineLength = 100
+        maxLineGap = 10
 
-        contours, hierarchy = cv2.findContours(edges, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+        y_lines = cv2.HoughLinesP(y_edges, 1, np.pi/180, 40, minLineLength=minLineLength, maxLineGap=maxLineGap)
+        b_lines = cv2.HoughLinesP(b_edges, 1, np.pi/180, 30, minLineLength=minLineLength, maxLineGap=maxLineGap)
+
+        edges = cv2.addWeighted(y_edges, 1, b_edges, 1, 1)
+        #depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(bg_removed, alpha=0.1), cv2.COLORMAP_JET)
+
+        b_contours, hierarchy = cv2.findContours(cv2.cvtColor(b_result, cv2.COLOR_BGR2GRAY), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        y_contours, hierarchy = cv2.findContours(cv2.cvtColor(y_result, cv2.COLOR_BGR2GRAY), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #a = cv2.applyColorMap(cv2.convertScaleAbs(contours, alpha=0.3), cv2.COLORMAP_JET)
 
         depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
+        y_deg = 0
+        x_deg = 0
+        try:
+            a = None
+            c = 100000
+            for a in y_lines:
+                for x1,y1,x2,y2 in a:
+                    if y1 < c:
+                        c = y1
+                        a = b
+                    #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
+            for x1,y1,x2,y2 in a:
+                #cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
+                angle = math.atan2( (y2 - y1), (x2 - x1))
+                y_deg = math.degrees(angle)    
+        except:
+            print("No yellow")
 
-        c2 = color_image.copy()
+        try:
+            a = None
+            c = 0
+            for b in b_lines:
+                for x1,y1,x2,y2 in b:
+                    if y1 > c:
+                        c = x1
+                        a = b
+                    #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
+            for x1,y1,x2,y2 in a:
+                #\cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
+                angle = math.atan2((y2 - y1), (x2 - x1))
+                x_deg = math.degrees(angle)    
+        except:
+            print("No blue")
+        if x_deg is not 0 and y_deg is not 0:
+            angle_buf.append((y_deg+x_deg)/2)
+            if len(angle_buf) > 20:
+                angle_buf.pop(0)
 
-        #if(contours):
-        #    for c in range(len(contours)):
-        #        print(c)
-        #        for (x, y) in contours[c].reshape(-1,2):
-        #            cv2.circle(c2, (x, y), 1, (0, 40 * c, 0), 3)
+        b_y = -1
+
+        if(b_contours):
+            lowest_point = 0
+            p = -1
+            q = -1
+            for i in range(len(b_contours)):
+                if len(b_contours[i]) < 20:
+                    continue
+                for f in range(len(b_contours[i])):
+                    if b_contours[i][f][0][1] > lowest_point:
+                        lowest_point = b_contours[i][f][0][1]
+                        p = i
+                        q = f
+
+            cv2.circle(c2, (b_contours[p][q][0][0], b_contours[p][q][0][1]), 4, (0, 0, 255))
+            b_y = b_contours[p][q][0][1]
+        
+        y_y = -1
+        
+        if(y_contours):
+            lowest_point = 0
+            p = -1
+            q = -1
+            for i in range(len(y_contours)):
+                if len(y_contours[i]) < 20:
+                    continue
+                for f in range(len(y_contours[i])):
+                    if y_contours[i][f][0][1] > lowest_point:
+                        lowest_point = y_contours[i][f][0][1]
+                        p = i
+                        q = f
+
+            cv2.circle(c2, (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (0, 0, 255))
+            y_y = y_contours[p][q][0][1]
+                
+        temp = (b_y - y_y) * 0.2
+
+        angle = 90 - temp
+
+        if angle > 135:
+            angle = 135
+        elif angle < 45:
+            angle = 45
+
+        straightness = 1 - (abs(angle-90) / 45)
+        speed = low_speed + (high_speed - low_speed) * straightness
+
+        print(speed)
+
+        st.move(str(angle))
+        st.move(str(speed))
     
         # Show images
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
-        cv2.imshow('Edges', edges)
-        #cv2.imshow('Color', c2)
+        #cv2.imshow('Edges', edges)
+        cv2.imshow('Color', c2)
         #cv2.imshow('mask', o)
         #cv2.imshow('asdd', depth_colormap)
         cv2.waitKey(1)
