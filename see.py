@@ -176,8 +176,8 @@ try:
         speed = low_speed + (high_speed - low_speed) * straightness
 
 
-        st.move(str(angle))
-        st.move(str(speed))
+        st.move(str(int(round(angle))))
+        #st.move(str(speed))
     
         # Show images
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
