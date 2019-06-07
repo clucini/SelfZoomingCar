@@ -85,45 +85,45 @@ try:
         y_contours, hierarchy = cv2.findContours(cv2.cvtColor(y_result, cv2.COLOR_BGR2GRAY), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #a = cv2.applyColorMap(cv2.convertScaleAbs(contours, alpha=0.3), cv2.COLORMAP_JET)
 
-        depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
-        y_deg = 0
-        x_deg = 0
-        try:
-            a = None
-            c = 100000
-            for a in y_lines:
-                for x1,y1,x2,y2 in a:
-                    if y1 < c:
-                        c = y1
-                        a = b
-                    #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
-            for x1,y1,x2,y2 in a:
-                #cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
-                angle = math.atan2( (y2 - y1), (x2 - x1))
-                y_deg = math.degrees(angle)    
-        except:
-            print("No yellow")
+        # depth_intrin = depth_frame.profile.as_video_stream_profile().intrinsics
+        # y_deg = 0
+        # x_deg = 0
+        # try:
+        #     a = None
+        #     c = 100000
+        #     for a in y_lines:
+        #         for x1,y1,x2,y2 in a:
+        #             if y1 < c:
+        #                 c = y1
+        #                 a = b
+        #             #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
+        #     for x1,y1,x2,y2 in a:
+        #         #cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
+        #         angle = math.atan2( (y2 - y1), (x2 - x1))
+        #         y_deg = math.degrees(angle)    
+        # except:
+        #     print("No yellow")
 
-        try:
-            a = None
-            c = 0
-            for b in b_lines:
-                for x1,y1,x2,y2 in b:
-                    if y1 > c:
-                        c = x1
-                        a = b
-                    #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
-            for x1,y1,x2,y2 in a:
-                #\cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
-                angle = math.atan2((y2 - y1), (x2 - x1))
-                x_deg = math.degrees(angle)    
-        except:
-            print("No blue")
+        # try:
+        #     a = None
+        #     c = 0
+        #     for b in b_lines:
+        #         for x1,y1,x2,y2 in b:
+        #             if y1 > c:
+        #                 c = x1
+        #                 a = b
+        #             #cv2.line(c2,(x1,y1),(x2,y2),(0,255,0),2)
+        #     for x1,y1,x2,y2 in a:
+        #         #\cv2.line(c2,(x1,y1),(x2,y2),(0,0,255),2)
+        #         angle = math.atan2((y2 - y1), (x2 - x1))
+        #         x_deg = math.degrees(angle)    
+        # except:
+        #     print("No blue")
 
-        if x_deg is not 0 and y_deg is not 0:
-            angle_buf.append((y_deg+x_deg)/2)
-            if len(angle_buf) > 20:
-                angle_buf.pop(0)
+        # if x_deg is not 0 and y_deg is not 0:
+        #     angle_buf.append((y_deg+x_deg)/2)
+        #     if len(angle_buf) > 20:
+        #         angle_buf.pop(0)
 
         b_y = -1
 
@@ -175,21 +175,17 @@ try:
         straightness = 1 - (abs(angle-90) / 45)
         speed = low_speed + (high_speed - low_speed) * straightness
 
-        print("Angle:", angle)
-        print("Blue:", b_y)
-        print("Yellow:", y_y)
 
         st.move(str(angle))
-        print("a")
         st.move(str(speed))
     
         # Show images
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         #cv2.imshow('Edges', edges)
-        cv2.imshow('Color', c2)
+#        cv2.imshow('Color', c2)
         #cv2.imshow('mask', o)
         #cv2.imshow('asdd', depth_colormap)
-        cv2.waitKey(1)
+#        cv2.waitKey(1)
 
 finally:
 
