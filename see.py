@@ -19,22 +19,22 @@ profile = pipeline.start(config)
 # Getting the depth sensor's depth scale (see rs-align example for explanation)
 depth_sensor = profile.get_device().first_depth_sensor()
 depth_scale = depth_sensor.get_depth_scale()
-
+clipping_distance = 3 / depth_scale
 # Start streaming
 b_lower = (100, 100, 100)
 b_upper = (110,255,200)
 
-y_lower = (20, 40, 0)
+y_lower = (25, 50, 100)
 y_upper = (30,255,255)
 
 align_to = rs.stream.color
 align = rs.align(align_to)
 angle_buf = []
 
-low_speed = 1560
-high_speed = 1575
+low_speed = 1570
+high_speed = 1590
 
-st.move(1565)
+st.move(str(1575))
 try:
     while True:
 
@@ -57,8 +57,11 @@ try:
         
         c2 = color_image.copy()
         depth_image_3d = np.dstack((depth_image,depth_image,depth_image)) #depth image is 1 channel, color is 3 channels
-        
-        hsv = cv2.cvtColor(color_image, cv2.COLOR_BGR2HSV)
+        #c2 = np.where((depth_image_3d > clipping_distance) | (depth_image_3d <= 0), 153, c2)
+       
+        c2 = c2[160:320, 0:640]
+
+        hsv = cv2.cvtColor(c2, cv2.COLOR_BGR2HSV)
 
         y_mask = cv2.inRange(hsv, y_lower, y_upper)
         b_mask = cv2.inRange(hsv, b_lower, b_upper)
@@ -77,8 +80,7 @@ try:
         b_lines = cv2.HoughLinesP(b_edges, 1, np.pi/180, 30, minLineLength=minLineLength, maxLineGap=maxLineGap)
 
         edges = cv2.addWeighted(y_edges, 1, b_edges, 1, 1)
-        #depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(bg_removed, alpha=0.1), cv2.COLORMAP_JET)
-
+         
         b_contours, hierarchy = cv2.findContours(cv2.cvtColor(b_result, cv2.COLOR_BGR2GRAY), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         y_contours, hierarchy = cv2.findContours(cv2.cvtColor(y_result, cv2.COLOR_BGR2GRAY), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         #a = cv2.applyColorMap(cv2.convertScaleAbs(contours, alpha=0.3), cv2.COLORMAP_JET)
@@ -117,6 +119,7 @@ try:
                 x_deg = math.degrees(angle)    
         except:
             print("No blue")
+
         if x_deg is not 0 and y_deg is not 0:
             angle_buf.append((y_deg+x_deg)/2)
             if len(angle_buf) > 20:
@@ -137,7 +140,7 @@ try:
                         p = i
                         q = f
 
-            cv2.circle(c2, (b_contours[p][q][0][0], b_contours[p][q][0][1]), 4, (0, 0, 255))
+            cv2.circle(c2, (b_contours[p][q][0][0], b_contours[p][q][0][1]), 4, (0, 255, 255))
             b_y = b_contours[p][q][0][1]
         
         y_y = -1
@@ -155,10 +158,10 @@ try:
                         p = i
                         q = f
 
-            cv2.circle(c2, (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (0, 0, 255))
+            cv2.circle(c2, (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
                 
-        temp = (b_y - y_y) * 0.2
+        temp = (b_y - y_y) * 0.3
 
         angle = 90 - temp
 
@@ -167,12 +170,17 @@ try:
         elif angle < 45:
             angle = 45
 
+        angle += 3
+
         straightness = 1 - (abs(angle-90) / 45)
         speed = low_speed + (high_speed - low_speed) * straightness
 
-        print(speed)
+        print("Angle:", angle)
+        print("Blue:", b_y)
+        print("Yellow:", y_y)
 
         st.move(str(angle))
+        print("a")
         st.move(str(speed))
     
         # Show images
