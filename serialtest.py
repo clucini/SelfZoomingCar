@@ -9,16 +9,10 @@ time.sleep(1)
 
 def move(angle):
     ser.write(str(angle).encode())
+    print(ser.readline())
 
 # while(1):
 
-#     number += 10
-#     if number > 135:
-#         number = 45
-#     move(number)
-#     #time.sleep(0.2)
-
-#     b = '''
 #     a = input("Value: ")
 #     try:
 #         int(a)
@@ -26,4 +20,3 @@ def move(angle):
 #         print("Invalid")
 #         continue
 #     move(a)
-#     '''
