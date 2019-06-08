@@ -32,9 +32,9 @@ align = rs.align(align_to)
 angle_buf = []
 
 low_speed = 1570
-high_speed = 1590
+high_speed = 1585
 
-st.move(str(1575))
+st.move(str(1580))
 try:
     while True:
 
@@ -170,14 +170,15 @@ try:
         elif angle < 45:
             angle = 45
 
-        angle += 3
-
         straightness = 1 - (abs(angle-90) / 45)
         speed = low_speed + (high_speed - low_speed) * straightness
-
+        if speed > high_speed:
+            speed = high_speed
+        elif speed < low_speed:
+            speed = low_speed
 
         st.move(str(int(round(angle))))
-        #st.move(str(speed))
+        st.move(str(int(round(speed))))
     
         # Show images
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
