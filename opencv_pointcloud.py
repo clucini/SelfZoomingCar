@@ -39,7 +39,7 @@ class AppState:
         self.prev_mouse = 0, 0
         self.mouse_btns = [False, False, False]
         self.paused = False
-        self.decimate = 1
+        self.decimate = 0
         self.scale = True
         self.color = True
 
