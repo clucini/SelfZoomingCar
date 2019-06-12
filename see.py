@@ -35,7 +35,7 @@ align = rs.align(align_to)
 angle_buf = []
 
 #High/low speed for the car
-low_speed = 1570
+low_speed = 1510
 high_speed = 1585
 
 #Sets the starting speed, this hardly lasts, because it gets overwritten very quickly
