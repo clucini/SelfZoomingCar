@@ -9,7 +9,7 @@ state={
     "pitch":-0.9,
     "yaw":0,
     "translation":np.array([0, 0, -0.3], dtype=np.float32),
-    "distance":1,
+    "distance":2,
     "scale":True,
     "color":True
 
@@ -169,7 +169,7 @@ while True:
     cv2.floodFill(flatout, mask, (0,flatout.shape[0]-1),(255,255,255)); 
     flatmask=(flatout==(0,0,0))[:,:,0].astype('uint8')
     """
-    kernel = np.ones((5,5),np.uint8)
+    kernel = np.ones((3,3),np.uint8)
     out = cv2.dilate(out,kernel,iterations=2)
     #
     # out = cv2.boxFilter(out,mask,3,cv2.INPAINT_TELEA)
