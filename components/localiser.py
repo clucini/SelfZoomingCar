@@ -1,0 +1,2 @@
+def getOurLocation(image):
+    return

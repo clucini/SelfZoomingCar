@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 import math
 import serialtest as st
+import see_plus_plus as spp
 
 # Configure depth and color streams
 # Create a pipeline
@@ -23,10 +24,10 @@ depth_scale = depth_sensor.get_depth_scale()
 clipping_distance = 3 / depth_scale
 
 #Upper and lower bounds for the lines of tape
-b_lower = (100, 100, 100)
+b_lower = (90, 100, 100)
 b_upper = (110,255,200)
 
-y_lower = (25, 50, 100)
+y_lower = (25, 150, 100)
 y_upper = (30,255,255)
 
 #:reps the aligning
@@ -39,7 +40,7 @@ low_speed = 1510
 high_speed = 1585
 
 #Sets the starting speed, this hardly lasts, because it gets overwritten very quickly
-st.move(str(1580))
+#st.move(str(int(1565)))
 
 try:
     while True:
@@ -217,13 +218,15 @@ try:
             speed = low_speed
 
         st.move(str(int(round(angle))))
+        st.move(str(1565))
 
         #If we can't see either line, don't move.
         #This is rudimentary and needs work.
-        if b_y == -1 and y_y == -1:
-            st.move(str(1500))
-        else:
-            st.move(str(int(round(speed))))
+       # if b_y == -1 and y_y == -1:
+       ##     pass
+       #     st.move(str(1650))
+       # else:
+       #     st.move(str(int(round(speed))))
 
         # Show various images, don't uncomment these when this is on the board, as it has a headless version of opencv, and doesn't suppport them.
         # Uncomment waitKey when you're using these.
@@ -231,10 +234,10 @@ try:
 
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         #cv2.imshow('Edges', edges)
-#        cv2.imshow('Color', c2)
+        cv2.imshow('Color', c2)
         #cv2.imshow('mask', o)
         #cv2.imshow('asdd', depth_colormap)
-#        cv2.waitKey(1)
+        cv2.waitKey(1)
 
 finally:
 

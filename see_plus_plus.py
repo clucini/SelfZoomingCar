@@ -12,7 +12,7 @@ def reciever(image):
     # calculate any corrections
     correction = getCorrection(ourLocation, pathToFollow)
     # physically adjust course, speed etc
-    actOn(correction)
+    actOn.do(correction)
 
 
 # The main loop starts in topdown.
