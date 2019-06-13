@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 import math
 import serialtest as st
-import see_plus_plus as spp
 
 # Configure depth and color streams
 # Create a pipeline

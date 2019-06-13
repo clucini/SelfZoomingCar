@@ -10,7 +10,8 @@ def reciever(image):
     # determine our location in our coordinate frame
     ourLocation = localiser.getOurLocation(image)
     # calculate any corrections
-    correction = getCorrection(ourLocation, pathToFollow)
+    if pathToFollow and ourLocation:
+        correction = getCorrection(ourLocation, pathToFollow)
     # physically adjust course, speed etc
     actOn.do(correction)
 
