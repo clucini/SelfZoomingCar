@@ -39,7 +39,7 @@ def getPathToFollow(image):
     # hierarchy isn't in use, but if its not there, the function doesn't work.
     b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
+    
     # get the largest contours
     main_b_contour = []
     main_b_area = 0
@@ -48,6 +48,8 @@ def getPathToFollow(image):
         if area > main_b_area:
             main_b_contour = i
             main_b_area = area
+    if main_b_contour is None:
+        return None
 
     main_y_contour = []
     main_y_area = 0
@@ -69,12 +71,12 @@ def getPathToFollow(image):
     # to do this, since i cbs to do a bunch of linear algebra, we'll draw the blue contour and then draw lines and then do a bitmask
     # first draw the blue contour and cache it
     blue_contour=np.zeros(image.shape[0:2]).astype('uint8')
-    cv2.drawContours(blue_contour,[main_b_contour],0,1,-1)
+    #cv2.drawContours(blue_contour,[main_b_contour],0,1,-1)
 
     #yellow_contour=np.zeros(image.shape[0:2]).astype('uint8')
     #cv2.drawContours(yellow_contour,main_y_contour,0,1,-1)
-    cv2.imshow("result",blue_contour*255)
-    cv2.waitKey(0)
+    #cv2.imshow("result",blue_contour*255)
+    #cv2.waitKey(0)
     
     # some debugging relics
     drep=np.copy(image)
