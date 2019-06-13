@@ -9,16 +9,6 @@ import numpy as np
 
 # Mode switching from yellow-blue to blue-yellow?
 
-def getX(dx,dy,x,y,y1):
-    if dy==0:
-        return -1
-    return x-(dx*(y-y1)/dy)
-
-def getY(dx,dy,x,y,x1):
-    if dx==0:
-        return -1
-    return y-(dy*(x-x1)/dx)
-
 def getPathToFollow(image):
 
     # Converts the remaining image from RGB to HSV
@@ -40,6 +30,9 @@ def getPathToFollow(image):
     b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
+    for i in b_contours:
+        continue
+
     # draw the contours onto the image cos ceebs
     image=cv2.drawContours(image,b_contours,-1,(0,0,255),-1)
     image=cv2.drawContours(image,y_contours,-1,(0,255,0),-1)
@@ -49,6 +42,8 @@ def getPathToFollow(image):
     main_b_area = 0
     for i in b_contours:
         area = cv2.contourArea(i)
+        #TODO: count contour length instead of area
+        
         if area > main_b_area:
             main_b_contour = i
             main_b_area = area
@@ -65,7 +60,13 @@ def getPathToFollow(image):
         return None, None, 1
     elif main_b_contour is None:
         return None, 1, None
-        
+    main_b_contour=np.reshape(main_b_contour,(main_b_contour.shape[0],main_b_contour.shape[2]))
+    main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))
+
+    pairs=find_overlaps(y_contours,b_contours)
+    parray=np.array(pairs)
+    
+
     # take only one in every 5 points from the contour
     #print(main_b_contour)
     #main_b_contour = main_b_contour[::2]
@@ -83,7 +84,6 @@ def getPathToFollow(image):
     #cv2.waitKey(0)
     
     # some debugging relics
-    drep=np.copy(image)
 
     blue_contour=blue_contour.astype('bool')
     midpoints = []
@@ -131,7 +131,6 @@ def getPathToFollow(image):
 
 if __name__== '__main__':
     img=cv2.imread("test.png")
-    print(img.shape)
     mid,yellow,blue=getPathToFollow(img)
     mid=np.array(mid).astype('int')
     yellow=np.array(yellow).astype('int')
