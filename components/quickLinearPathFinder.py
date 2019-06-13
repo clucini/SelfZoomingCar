@@ -9,6 +9,41 @@ import numpy as np
 
 # Mode switching from yellow-blue to blue-yellow?
 
+def find_overlaps(y_contours, b_contours):
+    #print(type(y_contours))
+    #dtype=[('x',int),('y',int)]
+    #y_contours=y_contours.astype(dtype)
+    #b_contours=b_contours.astype(dtype)
+    #y_contours=np.array(y_contours,dtype=dtype)
+    #b_contours=np.array(b_contours,dtype=dtype)
+    #y_contours.sort(order='y')
+    #b_contours.sort(order='y')
+    #y_contours=y_contours.astype(int)
+    #b_contours=b_contours.astype(int)
+
+    y_contours=y_contours[y_contours[:,1].argsort()]
+    b_contours=b_contours[b_contours[:,1].argsort()]
+
+    y_counter = 0
+    b_counter = 0
+
+    pairs = []
+
+    for i in range(0, len(y_contours)):
+        lastdiff = 100000
+        f = 0
+        while abs(y_contours[i][1] - b_contours[f][1]) <= lastdiff:
+            #print(b_contours[f])
+            lastdiff = abs(y_contours[i][1] - b_contours[f][1])
+            #print(lastdiff)
+            f += 1
+            if f >= len(b_contours):
+                break
+        pairs.append((y_contours[i],b_contours[f-1]))
+
+    return pairs
+
+
 def getPathToFollow(image):
 
     # Converts the remaining image from RGB to HSV
@@ -18,7 +53,7 @@ def getPathToFollow(image):
     b_lower = (100, 80, 80)
     b_upper = (110,255,200)
 
-    y_lower = (20, 150, 100)
+    y_lower = (20, 50, 100)
     y_upper = (35,255,255)
 
     # Get blue and yellow sections (thanks claudio)
@@ -30,12 +65,9 @@ def getPathToFollow(image):
     b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
-    for i in b_contours:
-        continue
-
     # draw the contours onto the image cos ceebs
-    image=cv2.drawContours(image,b_contours,-1,(0,0,255),-1)
-    image=cv2.drawContours(image,y_contours,-1,(0,255,0),-1)
+    #image=cv2.drawContours(image,b_contours,-1,(0,0,255),-1)
+    #image=cv2.drawContours(image,y_contours,-1,(0,255,0),-1)
 
     # get the largest contours
     main_b_contour = None
@@ -62,71 +94,12 @@ def getPathToFollow(image):
         return None, 1, None
     main_b_contour=np.reshape(main_b_contour,(main_b_contour.shape[0],main_b_contour.shape[2]))
     main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))
-
-    pairs=find_overlaps(y_contours,b_contours)
+    #print (main_b_contour)
+    pairs=find_overlaps(main_y_contour,main_b_contour)
     parray=np.array(pairs)
-    
-
-    # take only one in every 5 points from the contour
-    #print(main_b_contour)
-    #main_b_contour = main_b_contour[::2]
-    main_y_contour = main_y_contour[::10]
-    #pgrint(main_b_contour)
-    # for just the yellow contour, draw normals which meet the blue contour
-    # to do this, since i cbs to do a bunch of linear algebra, we'll draw the blue contour and then draw lines and then do a bitmask
-    # first draw the blue contour and cache it
-    blue_contour=np.zeros(image.shape[0:2]).astype('uint8')
-    cv2.drawContours(blue_contour,[main_b_contour],0,1,-1)
-
-    #yellow_contour=np.zeros(image.shape[0:2]).astype('uint8')
-    #cv2.drawContours(yellow_contour,main_y_contour,0,1,-1)
-    #cv2.imshow("result",blue_contour*255)
-    #cv2.waitKey(0)
-    
-    # some debugging relics
-
-    blue_contour=blue_contour.astype('bool')
-    midpoints = []
-    yellowpoints = []
-    bluepoints = [] 
-    for i, v in enumerate(main_y_contour):
-        if (i == len(main_y_contour)-1):
-            # prevent crashing on final point
-            break
-        nextPoint = main_y_contour[i+1]
-        if (v[0][0]>nextPoint[0][0]):
-            continue
-        midpoint = ((v + nextPoint)/2)[0]
-        lineStart=(0,int(midpoint[1]))
-        lineEnd=(image.shape[1],int(midpoint[1]))
-        linemask=np.zeros(image.shape[0:2])
-        #print (successfulcoords)
-        linemask=cv2.line(linemask,lineStart,lineEnd,1,2).astype('bool')
-        # cv2.imshow("result",linemask.astype('uint8')*255)
-        #cv2.waitKey(0)
-        bitand=linemask*blue_contour
-
-        _bitand=np.copy(bitand).astype('uint8')*255
-        _bitand=cv2.erode(_bitand,(5,5))
-        #cv2.imshow("result",_bitand)
-        #cv2.waitKey(1)
-        if (np.sum(bitand)>0):
-            # Find first nonzero cooordinate
-            # print("Sum: ", np.sum(bitand))
-            firstNonzero=np.transpose(np.array(np.nonzero(bitand)))[0]
-            t=firstNonzero[0]
-            firstNonzero[0]=firstNonzero[1]
-            firstNonzero[1]=t
-            cv2.circle(_bitand,tuple(firstNonzero),10,255,-1)
-            # cv2.imshow("result",_bitand)
-            # cv2.waitKey(1)
-            # Calculate the midpoint
-            midmidpoint=(firstNonzero+midpoint)/2
-            midpoints.append(midmidpoint)
-            yellowpoints.append(midpoint)
-            bluepoints.append(firstNonzero)
-            # Add midpoint to return list
-  
+    bluepoints=np.reshape(parray[:,1,:],(parray.shape[0],2))
+    yellowpoints=np.reshape(parray[:,0,:],(parray.shape[0],2))
+    midpoints=(bluepoints+yellowpoints)/2
     return midpoints, yellowpoints, bluepoints
 
 if __name__== '__main__':
