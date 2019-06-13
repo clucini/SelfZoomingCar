@@ -28,7 +28,7 @@ def getPathToFollow(image):
     b_lower = (100, 80, 80)
     b_upper = (110,255,200)
 
-    y_lower = (20, 50, 100)
+    y_lower = (20, 150, 100)
     y_upper = (35,255,255)
 
     # Get blue and yellow sections (thanks claudio)
@@ -40,6 +40,10 @@ def getPathToFollow(image):
     b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
+    # draw the contours onto the image cos ceebs
+    image=cv2.drawContours(image,b_contours,-1,(0,0,255),-1)
+    image=cv2.drawContours(image,y_contours,-1,(0,255,0),-1)
+
     # get the largest contours
     main_b_contour = None
     main_b_area = 0
@@ -65,7 +69,7 @@ def getPathToFollow(image):
     # take only one in every 5 points from the contour
     #print(main_b_contour)
     #main_b_contour = main_b_contour[::2]
-    main_y_contour = main_y_contour[::1]
+    main_y_contour = main_y_contour[::10]
     #pgrint(main_b_contour)
     # for just the yellow contour, draw normals which meet the blue contour
     # to do this, since i cbs to do a bunch of linear algebra, we'll draw the blue contour and then draw lines and then do a bitmask
@@ -90,7 +94,7 @@ def getPathToFollow(image):
             # prevent crashing on final point
             break
         nextPoint = main_y_contour[i+1]
-        if (v[0][1]>nextPoint[0][1]):
+        if (v[0][0]>nextPoint[0][0]):
             continue
         midpoint = ((v + nextPoint)/2)[0]
         lineStart=(0,int(midpoint[1]))
