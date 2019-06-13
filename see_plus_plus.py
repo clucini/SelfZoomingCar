@@ -1,4 +1,4 @@
-import components.topdown as topdown
+import components.seefoward as camera
 import components.pathfinder as pathfinder
 import components.localiser as localiser
 import components.getCorrection as getCorrection
@@ -18,7 +18,7 @@ def reciever(image):
 # The main loop starts in topdown.
 # We implement a function that is passed to topdown; topdown
 # runs this at each loop when it gets the corresponding image.
-topdown.sendImageTo(reciever)
+camera.sendImageTo(reciever)
 
 # Start the program
-topdown.start()
+camera.start()
