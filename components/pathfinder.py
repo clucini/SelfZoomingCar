@@ -57,8 +57,11 @@ def getPathToFollow(image):
             main_y_contour = i
             main_y_area = area
 
-    if main_y_contour is None or main_b_contour is None :
-        return None, None, None
+    if main_y_contour is None:
+        return None, None, 1
+    elif main_b_contour is None:
+        return None, 1, None
+        
     # take only one in every 5 points from the contour
     #print(main_b_contour)
     #main_b_contour = main_b_contour[::2]
