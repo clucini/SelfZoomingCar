@@ -9,7 +9,7 @@ pipeline = rs.pipeline()
 
 #Create a config and configure the pipeline to stream
 config = rs.config()
-config.enable_stream(rs.stream.depth, 640, 360, rs.format.z16, 30)
+config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 640, 360, rs.format.bgr8, 30)
 
 # Start streaming
@@ -40,7 +40,7 @@ def start():
         c2 = color_image.copy()
 
         #Crops the top half of the image
-        c2 = c2[160:320, 0:640]
+        # c2 = c2[160:320, 0:640]
         func_to_send_to(c2)
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         #cv2.imshow('Edges', edges)
