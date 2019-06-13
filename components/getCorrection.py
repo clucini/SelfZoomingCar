@@ -9,7 +9,17 @@ def getCorrection(ourLocation,pathToFollow):
     for i in pathToFollow:
         dist=np.linalg.norm(i-ourLocation)
         if dist>radius and dist<minDist:
-            targetPoint=pathToFollow
+            targetPoint=np.array(pathToFollow)[0]
             mindist=dist
+    print(targetPoint)
+    print(ourLocation)
     deviationVector=targetPoint-ourLocation
-    return np.arccos(np.dot(deviationVector,centre)/np.linalg.norm(deviationVector)*np.linalg.norm(centre))*180/np.pi()
+    deviationVector[1]*=-1
+    print(deviationVector)
+    print(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi))
+    return np.clip(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi),45,135)
+
+if __name__=="__main__":
+    print(getCorrection(np.array((320,100)),[np.array((310,80)),np.array((320,90))]))
+
+

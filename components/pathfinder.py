@@ -41,17 +41,15 @@ def getPathToFollow(image):
     y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     
     # get the largest contours
-    main_b_contour = []
+    main_b_contour = None
     main_b_area = 0
     for i in b_contours:
         area = cv2.contourArea(i)
         if area > main_b_area:
             main_b_contour = i
             main_b_area = area
-    if main_b_contour is None:
-        return None
 
-    main_y_contour = []
+    main_y_contour = None
     main_y_area = 0
     for i in y_contours:
         area = cv2.contourArea(i)
@@ -59,19 +57,18 @@ def getPathToFollow(image):
             main_y_contour = i
             main_y_area = area
 
+    if main_y_contour is None or main_b_contour is None :
+        return None, None, None
     # take only one in every 5 points from the contour
     #print(main_b_contour)
-    print (main_b_contour.shape)
     #main_b_contour = main_b_contour[::2]
-    print (main_b_contour.shape)
     main_y_contour = main_y_contour[::1]
     #pgrint(main_b_contour)
     # for just the yellow contour, draw normals which meet the blue contour
-    returnlist=[]
     # to do this, since i cbs to do a bunch of linear algebra, we'll draw the blue contour and then draw lines and then do a bitmask
     # first draw the blue contour and cache it
     blue_contour=np.zeros(image.shape[0:2]).astype('uint8')
-    #cv2.drawContours(blue_contour,[main_b_contour],0,1,-1)
+    cv2.drawContours(blue_contour,[main_b_contour],0,1,-1)
 
     #yellow_contour=np.zeros(image.shape[0:2]).astype('uint8')
     #cv2.drawContours(yellow_contour,main_y_contour,0,1,-1)
@@ -82,6 +79,9 @@ def getPathToFollow(image):
     drep=np.copy(image)
 
     blue_contour=blue_contour.astype('bool')
+    midpoints = []
+    yellowpoints = []
+    bluepoints = [] 
     for i, v in enumerate(main_y_contour):
         if (i == len(main_y_contour)-1):
             # prevent crashing on final point
@@ -123,38 +123,38 @@ def getPathToFollow(image):
         linemask=np.zeros(image.shape[0:2])
         successfulcoords=[(int(i[0]),int(i[1])) for i in successfulcoords]
         #print (successfulcoords)
+        
         if (len (successfulcoords)):
             linemask=cv2.line(linemask,tuple(midpoint.astype('int')),successfulcoords[0],1,2).astype('bool')
-            #cv2.imshow("result",linemask.astype('uint8')*255)
+            # cv2.imshow("result",linemask.astype('uint8')*255)
             #cv2.waitKey(0)
-            
             bitand=linemask*blue_contour
-            print (bitand.shape)
+
             _bitand=np.copy(bitand).astype('uint8')*255
             _bitand=cv2.erode(_bitand,(5,5))
             #cv2.imshow("result",_bitand)
-            #cv2.waitKey(0)
+            #cv2.waitKey(1)
             if (np.sum(bitand)>0):
                 # Find first nonzero cooordinate
-                firstNonzero=np.transpose(np.array(np.nonzero(_bitand)))[0]
-                print(firstNonzero)
-                print(bitand[firstNonzero[0],firstNonzero[1]])
-                print(blue_contour[firstNonzero[0],firstNonzero[1]])
+                # print("Sum: ", np.sum(bitand))
+                firstNonzero=np.transpose(np.array(np.nonzero(bitand)))[0]
                 t=firstNonzero[0]
                 firstNonzero[0]=firstNonzero[1]
                 firstNonzero[1]=t
                 cv2.circle(_bitand,tuple(firstNonzero),10,255,-1)
-                cv2.imshow("result",_bitand)
-                cv2.waitKey(0)
+                # cv2.imshow("result",_bitand)
+                # cv2.waitKey(1)
                 # Calculate the midpoint
                 midmidpoint=(firstNonzero+midpoint)/2
+                midpoints.append(midmidpoint)
+                yellowpoints.append(midpoint)
+                bluepoints.append(firstNonzero)
                 # Add midpoint to return list
-                returnlist.append((midmidpoint,midpoint,firstNonzero))
-    return returnlist
+  
+    return midpoints, yellowpoints, bluepoints
 
 if __name__== '__main__':
     img=cv2.imread("test.png")
-    print(img.shape)
     paths=getPathToFollow(img)
     paths=np.array(paths).astype('int')
     for i,v in enumerate(paths):
