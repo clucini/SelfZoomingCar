@@ -14,6 +14,13 @@ state={
     "color":True
 
 }
+
+func_to_send_to = None
+
+def sendImageTo(func):
+    global func_to_send_to
+    func_to_send_to = func
+
 def rotation():
     Rx, _ = cv2.Rodrigues((state["pitch"], 0, 0))
     Ry, _ = cv2.Rodrigues((0, state["yaw"], 0))
@@ -174,6 +181,8 @@ while True:
     #
     # out = cv2.boxFilter(out,mask,3,cv2.INPAINT_TELEA)
     # finish inpaint
+    func_to_send_to(out)
+
     cv2.imshow("rs", out)
     key = cv2.waitKey(1)
 
