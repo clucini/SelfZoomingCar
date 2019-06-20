@@ -1,5 +1,6 @@
 import numpy as np
-def getCorrection(ourLocation,pathToFollow):
+import cv2
+def getCorrection(ourLocation,pathToFollow, image=None):
     # Trim based on path
     radius=5
     minDist=10000
@@ -9,7 +10,7 @@ def getCorrection(ourLocation,pathToFollow):
     for i in pathToFollow:
         dist=np.linalg.norm(i-ourLocation)
         if dist>radius and dist<minDist:
-            targetPoint=np.array(pathToFollow)[0]
+            targetPoint=i
             mindist=dist
     print(targetPoint)
     print(ourLocation)
@@ -19,6 +20,8 @@ def getCorrection(ourLocation,pathToFollow):
     print(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi))
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
+    if not image is None:
+        image=cv2.line(image,tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
     return np.clip(angle,45,135)
 
 if __name__=="__main__":
