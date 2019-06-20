@@ -1,6 +1,6 @@
 import components.seeforward as camera
 import components.quickLinearPathFinder as pathfinder
-import components.nullObstacleDetector as obstacleDetector
+import components.obstacledetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.actOnfake as actOn
