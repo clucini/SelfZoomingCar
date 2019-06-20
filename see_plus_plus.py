@@ -6,34 +6,45 @@ import components.getCorrection as gc
 import components.actOn as actOn
 import components.getContours as getContours
 import cv2
+import numpy as np
 
 def reciever(image):
-    #Get Contours
     helper = {}
     helper['image'] = image
     helper['draw_image'] = image.copy()
+    
+    #Get Contours
     getContours.get_c(helper)
+    
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         actOn.move(1500)
         print('Can\' see anything')
     elif helper['main_y_contour'] is None:
-        actOn.move(45)
+        helper['midpoints'] = np.array([0,0])
         print('Can\'t see yellow')
     elif helper['main_b_contour'] is None:
-        actOn.move(135)
+        helper['midpoints'] = np.array([0,image.shape[1]])
         print('Can\'t see blue')
+
     else:
-        # determine path to be followed in our coordinate frame
-        pathfinder.getPathToFollow(helper)
-        # determine a new path to follow taking into account obstacles
-        obstacleDetector.amendPath(helper)
-        # determine our location in our coordinate frame
-        localiser.getOurLocation(helper)
-        # calculate any corrections
-        correction = gc.getCorrection(helper)
-        actOn.move(int(correction)) # physically adjust course, speed etc
-        for e in helper['midpoints']:
-            cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
+        pathfinder.getPathToFollow(helper)    # determine path to be followed in our coordinate frame
+    
+    # determine a new path to follow taking into account obstacles
+    obstacleDetector.amendPath(helper)
+    
+    # determine our location in our coordinate frame
+    localiser.getOurLocation(helper)
+    
+    # calculate any corrections
+    correction = gc.getCorrection(helper)
+
+    # physically adjust course, speed etc
+    actOn.move(int(correction))
+
+
+    #Draw things for debug purposes
+    for e in helper['midpoints']:
+        cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
     
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
