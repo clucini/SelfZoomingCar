@@ -11,8 +11,8 @@ def move(angle):
     a = ser.readline().decode()
     if a.strip() != str(angle):
         print(a)
-    ser.write(str("1575").encode())
+    ser.write(str("1560").encode())
     a = ser.readline().decode()
-    if a.strip() != "1575":
+    if a.strip() != "1560":
         print(a)
 
