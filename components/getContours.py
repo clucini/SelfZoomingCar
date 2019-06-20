@@ -6,6 +6,7 @@ def get_c(helper):
     image = helper['image']
     # Converts the remaining image from RGB to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    helper['hsv']=hsv # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 100, 100)

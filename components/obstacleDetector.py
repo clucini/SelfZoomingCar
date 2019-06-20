@@ -38,9 +38,9 @@ def find_overlaps(y_contours, b_contours):
 
 
 
-def amendPath(path,image):
+def amendPath(helper):
     # Converts the remaining image from RGB to HSV
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv=helper['hsv']
     # threshold out obstacles
     obj_lower = (150, 70, 60)
     obj_upper = (170,255,255)
@@ -57,17 +57,20 @@ def amendPath(path,image):
             la=ca
     # if no obstacles, break
     if laobj is None:
-        return path
+        return
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
     # Draw contours on image
-    image=cv2.drawContours(image,[approx],-1,(255,0,0),-1)
+    drawImg=helper['draw_image']
+    drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),-1)
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
     mins=ys.argsort()[-2:]
     minpts=approx[mins,:,:].reshape((2,2))
     # Find blue and yellow corresponding points.
+    blue_contours=helper['main_b_contour']
+    yellow_contours=helper['main_y_contour']
     bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
     yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
     # find the distance between blues and yellows and choose one
@@ -76,6 +79,6 @@ def amendPath(path,image):
     result=(bluepair[0]+bluepair[1])/2
     if bluedist>yellodist:
         result=(yellopair[0]+yellopair[1])/2
-
-    cv2.circle(image,tuple(result),20,(0,255,255),-1)
+    
+    cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
     return path
