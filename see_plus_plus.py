@@ -17,6 +17,7 @@ def reciever(image):
     getContours.get_c(helper)
     
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
+        ## this doesnt quite work
         actOn.move(1500)
         print('Can\' see anything')
     elif helper['main_y_contour'] is None:

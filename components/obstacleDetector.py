@@ -5,7 +5,6 @@ import numpy as np
 # if the obstacle is outside the track.
 
 def find_overlaps(y_contours, b_contours):
-
     y_contours=y_contours[y_contours[:,1].argsort()]
     b_contours=b_contours[b_contours[:,1].argsort()]
 
@@ -45,6 +44,7 @@ def amendPath(helper):
     obj_lower = (150, 60, 60)
     obj_upper = (170,255,255)
     obj_mask = cv2.inRange(hsv, obj_lower, obj_upper)
+    cv2.imshow("purpleboi",obj_mask)
     # Get contours
     cnts=cv2.findContours(obj_mask,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[0]
     # get contour with largest area
@@ -63,7 +63,8 @@ def amendPath(helper):
     approx = cv2.approxPolyDP(laobj,epsilon,True)
     # Draw contours on image
     drawImg=helper['draw_image']
-    drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),-1)
+    # drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),3)
+    drawImg=cv2.drawContours(drawImg,[laobj],-1,(255,0,0),-1)
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
     mins=ys.argsort()[-2:]
@@ -74,14 +75,24 @@ def amendPath(helper):
     # Find blue and yellow corresponding points.
     blue_contours=helper['main_b_contour']
     yellow_contours=helper['main_y_contour']
-    bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
-    yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
+    if not blue_contours is None:
+        bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
+        bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
+        blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
+    else:
+        blue=0
+    if not yellow_contours is None:
+        yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
+        yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
+        yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
+    else:
+        yellodist=0
     # find the distance between blues and yellows and choose one
-    bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
-    yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
-    result=((bluepair[0]+bluepair[1])/2).astype(int)
+    
     if bluedist<yellodist:
-        result=((yellopair[0]+yellopair[1])/2).astype(int)
+        result=blueresult
+    else:
+        result=yelloresult
     helper['midpoints']=[result]
     
     cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
