@@ -9,10 +9,10 @@ def get_c(helper):
     helper['hsv']=hsv # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
-    b_lower = (100, 50, 100)
+    b_lower = (100, 70, 100)
     b_upper = (115, 255, 255)
 
-    y_lower = (15, 70, 70)
+    y_lower = (15, 75, 150)
     y_upper = (30, 255, 255)
 
     # Get blue and yellow sections (thanks claudio)

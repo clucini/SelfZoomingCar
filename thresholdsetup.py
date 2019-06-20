@@ -5,7 +5,7 @@ import cv2
 b_lower = (100, 100, 100)
 b_upper = (115,255,255)
 
-y_lower = (15, 50, 50)
+y_lower = (15, 150, 50)
 y_upper = (30,255,255)
 
 def reciever(image):

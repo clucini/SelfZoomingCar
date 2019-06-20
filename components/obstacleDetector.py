@@ -80,7 +80,7 @@ def amendPath(helper):
         bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
         blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
     else:
-        blue=0
+        bluedist=0
     if not yellow_contours is None:
         yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
         yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
@@ -90,10 +90,11 @@ def amendPath(helper):
     # find the distance between blues and yellows and choose one
     
     if bluedist<yellodist:
-        result=blueresult
-    else:
         result=yelloresult
-    helper['midpoints']=[result]
+    else:
+        result=blueresult
+
+    helper['midpoints'] = [result]
     
     cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
     return
