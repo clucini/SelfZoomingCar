@@ -5,15 +5,25 @@ import math
 
 # Configure depth and color streams
 # Create a pipeline
+i = 0
+print(i)
+i += 1
+
 pipeline = rs.pipeline()
+print(i)
+i += 1
 
 #Create a config and configure the pipeline to stream
 config = rs.config()
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 
+print(i)
+i += 1
 # Start streaming
 profile = pipeline.start(config)
 
+print(i)
+i += 1
 func_to_send_to = None
 
 def sendImageTo(func):
