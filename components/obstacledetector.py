@@ -61,51 +61,21 @@ def amendPath(path,image):
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
-    # Find the lowest set of points in the approximation
-    image=cv2.drawContours(image,[approx],-1,(255,0,0),-1)
-    ys=approx[:,:,1].reshape((approx.shape[0]))
-    mins=ys.argsort()[-2:]
-    print (mins)
-    print (approx)
-    minpts=approx[mins,:,:].reshape((2,2))
-    print(minpts)
-    # Draw a line from edge to edge
-    m=(minpts[0,1]-minpts[1,1])/(minpts[0,0]-minpts[1,0])
-    # TODO FIX INFINITY
-    if (minpts[0,0]-minpts[1,0])==0:
-        return path
-    b=minpts[0,1]-m*minpts[0,0]
-    leftborderpoint=[0,int(b)]
-    rightborderpoint=[image.shape[1],int(m*image.shape[1]+b)]
-    line=np.zeros(image.shape[:2])
-    line=cv2.line(line,tuple(leftborderpoint),tuple(rightborderpoint),255,2)
-    image=cv2.line(image,tuple(leftborderpoint),tuple(rightborderpoint),255,2)
-    # bitwise and it with our yellow and blue contours
-    # Upper and lower bounds for the lines of tape (thanks claudio)
-    b_lower = (100, 80, 80)
-    b_upper = (110,255,200)
-
-    y_lower = (20, 50, 100)
-    y_upper = (35,255,255)
-
-    # Get blue and yellow sections (thanks claudio)
-    y_mask = cv2.inRange(hsv, y_lower, y_upper)
-    b_mask = cv2.inRange(hsv, b_lower, b_upper)
-    kernel=(5,5)
-    y_mask=cv2.erode(y_mask,kernel);
-    b_mask=cv2.erode(b_mask,kernel)
-
-    y_band = np.bitwise_and(y_mask.astype(int),line.astype(int))
-    cv2.imshow("line",line)
-    cv2.imshow("purey",y_mask)
-    cv2.imshow("pureb",b_mask)
-    firstNonzero=np.transpose(np.array(np.nonzero(y_band)))
-    if len(firstNonzero):
-        firstNonzero=firstNonzero[0]
-    else:
-        return path
-    cv2.circle(image,tuple(firstNonzero),20,(0,255,255),-1)
-
     # Draw contours on image
     image=cv2.drawContours(image,[approx],-1,(255,0,0),-1)
+    # Find the lowest set of points in the approximation
+    ys=approx[:,:,1].reshape((approx.shape[0]))
+    mins=ys.argsort()[-2:]
+    minpts=approx[mins,:,:].reshape((2,2))
+    # Find blue and yellow corresponding points.
+    bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
+    yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
+    # find the distance between blues and yellows and choose one
+    bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
+    yellodist=np.linalg.norm(bluepair[0]-bluepair[1])
+    result=(bluepair[0]+bluepair[1])/2
+    if bluedist>yellodist:
+        result=(yellopair[0]+yellopair[1])/2
+
+    cv2.circle(image,tuple(result),20,(0,255,255),-1)
     return path

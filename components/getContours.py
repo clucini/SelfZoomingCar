@@ -1,16 +1,18 @@
 import cv2
+import numpy as np
 
-def get_c(image):
-    
+
+def get_c(helper):
+    image = helper['image']
     # Converts the remaining image from RGB to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 100, 100)
-    b_upper = (115,255,255)
+    b_upper = (115, 255, 255)
 
     y_lower = (15, 150, 150)
-    y_upper = (30,255,255)
+    y_upper = (30, 255, 255)
 
     # Get blue and yellow sections (thanks claudio)
     y_mask = cv2.inRange(hsv, y_lower, y_upper)
@@ -62,8 +64,20 @@ def get_c(image):
         # cv2.circle(c2, (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
         y_y = y_contours[p][q][0][1]
 
+
+    helper['main_y_contour'] = main_y_contour
+    helper['main_b_contour'] = main_b_contour
+
+    if main_y_contour is None or main_b_contour is None:
+        return None
+
     cv2.drawContours(image, main_y_contour, -1, (0,255,0), 3)
     cv2.drawContours(image, main_b_contour, -1, (0,255,0), 3)
-    
-    return main_y_contour, main_b_contour
+
+    main_b_contour=np.reshape(main_b_contour,(main_b_contour.shape[0],main_b_contour.shape[2]))
+    main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))
+
+    helper['main_y_contour'] = main_y_contour
+    helper['main_b_contour'] = main_b_contour
+
 

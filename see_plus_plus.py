@@ -1,6 +1,6 @@
 import components.seeforward as camera
 import components.quickLinearPathFinder as pathfinder
-import components.obstacledetector as obstacleDetector
+import components.nullObstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.actOn as actOn
@@ -9,27 +9,29 @@ import cv2
 
 def reciever(image):
     #Get Contours
-    main_y_contour, main_b_contour = getContours.get_c(image) 
-    if not (main_y_contour or main_b_contour):
+    helper = {}
+    helper['image'] = image
+    getContours.get_c(helper)
+    if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         actOn.move(1500)
         print('Can\' see anything')
-    elif not main_y_contour:
+    elif helper['main_y_contour'] is None:
         actOn.move(45)
         print('Can\'t see yellow')
-    elif not main_b_contour:
-        act0n.move()
+    elif helper['main_b_contour'] is None:
+        actOn.move(135)
         print('Can\'t see blue')
     else:
         # determine path to be followed in our coordinate frame
-        pathToFollow, yellowpoints, bluepoints = pathfinder.getPathToFollow(main_y_contour, main_b_contour)
+        pathfinder.getPathToFollow(helper)
         # determine a new path to follow taking into account obstacles
-        pathToFollow = obstacleDetector.amendPath(pathToFollow,image)
+        obstacleDetector.amendPath(helper)
         # determine our location in our coordinate frame
-        ourLocation = localiser.getOurLocation(image)
+        localiser.getOurLocation(helper)
         # calculate any corrections
-        correction = gc.getCorrection(ourLocation, pathToFollow, image)
+        correction = gc.getCorrection(helper)
         actOn.move(int(correction)) # physically adjust course, speed etc
-        for e in pathToFollow:
+        for e in helper['midpoints']:
             cv2.circle(image, (int(e[0]), int(e[1])), 4, (0, 0, 255))
     
     cv2.imshow("Color", image)
