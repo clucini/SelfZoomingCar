@@ -42,7 +42,7 @@ def amendPath(helper):
     # Converts the remaining image from RGB to HSV
     hsv=helper['hsv']
     # threshold out obstacles
-    obj_lower = (150, 70, 60)
+    obj_lower = (150, 60, 60)
     obj_upper = (170,255,255)
     obj_mask = cv2.inRange(hsv, obj_lower, obj_upper)
     # Get contours
@@ -52,11 +52,11 @@ def amendPath(helper):
     laobj=None
     for i in cnts:
         ca=cv2.contourArea(i)
-        if ca>100 and ca>la:
+        if ca>la:
             laobj=i
             la=ca
     # if no obstacles, break
-    if laobj is None:
+    if laobj is None or la<40:
         return
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
@@ -72,13 +72,14 @@ def amendPath(helper):
     blue_contours=helper['main_b_contour']
     yellow_contours=helper['main_y_contour']
     bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
-    yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
+    yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
     # find the distance between blues and yellows and choose one
     bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
-    yellodist=np.linalg.norm(bluepair[0]-bluepair[1])
-    result=(bluepair[0]+bluepair[1])/2
-    if bluedist>yellodist:
-        result=(yellopair[0]+yellopair[1])/2
+    yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
+    result=((bluepair[0]+bluepair[1])/2).astype(int)
+    if bluedist<yellodist:
+        result=((yellopair[0]+yellopair[1])/2).astype(int)
+    helper['midpoints']=[result]
     
     cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
-    return path
+    return

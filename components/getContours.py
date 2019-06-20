@@ -9,10 +9,10 @@ def get_c(helper):
     helper['hsv']=hsv # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
-    b_lower = (100, 100, 100)
+    b_lower = (100, 60, 90)
     b_upper = (115, 255, 255)
 
-    y_lower = (15, 150, 150)
+    y_lower = (15, 90, 100)
     y_upper = (30, 255, 255)
 
     # Get blue and yellow sections (thanks claudio)
@@ -32,16 +32,16 @@ def get_c(helper):
         p = None
         q = -1
         for i in range(len(b_contours)):
-            if len(b_contours[i]) < 20:
+            if len(b_contours[i]) < 10:
                 continue
             for f in range(len(b_contours[i])):
                 if b_contours[i][f][0][1] > lowest_point:
                     lowest_point = b_contours[i][f][0][1]
                     p = i
                     q = f
-        if p:
+        if not p is None:
             main_b_contour = b_contours[p]
-            cv2.circle(helper['draw_image'], (b_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            #cv2.circle(helper['draw_image'], (b_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             b_y = b_contours[p][q][0][1]
 
     main_y_contour = None
@@ -52,20 +52,20 @@ def get_c(helper):
         p = -1
         q = -1
         for i in range(len(y_contours)):
-            if len(y_contours[i]) < 20:
+            if len(y_contours[i]) < 10:
                 continue
             for f in range(len(y_contours[i])):
                 if y_contours[i][f][0][1] > lowest_point:
                     lowest_point = y_contours[i][f][0][1]
                     p = i
                     q = f
-        if p:
+        if not p is None:
             main_y_contour = y_contours[p]
-            cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
 
-    cv2.drawContours(image, main_y_contour, -1, (0,255,0), 3)
-    cv2.drawContours(image, main_b_contour, -1, (0,255,0), 3)
+    cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
+    cv2.drawContours(helper['draw_image'], main_b_contour, -1, (0,255,0), 3)
 
     helper['main_y_contour'] = main_y_contour
     helper['main_b_contour'] = main_b_contour
