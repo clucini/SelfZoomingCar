@@ -35,7 +35,8 @@ def reciever(image):
         for e in helper['midpoints']:
             cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
     
-    cv2.imshow("Color", helper['draw_image'])
+    cv2.imshow("uneditted", image)
+    cv2.imshow("drawn", helper['draw_image'])
     cv2.waitKey(1)
 
 
