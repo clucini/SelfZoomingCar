@@ -15,12 +15,8 @@ def getCorrection(helper):
         if dist>radius and dist<minDist:
             targetPoint=i
             mindist=dist
-    print(targetPoint)
-    print(ourLocation)
     deviationVector=targetPoint-ourLocation
     deviationVector[1]*=-1
-    print(deviationVector)
-    print(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi))
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
     if not image is None:
