@@ -82,7 +82,7 @@ def amendPath(helper):
     else:
         blue=0
     if not yellow_contours is None:
-        yellopair=find_overlaps(np.array([minpts[0]]),yello_contours)[0]
+        yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
         yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
         yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
     else:
