@@ -17,7 +17,9 @@ def getCorrection(ourLocation,pathToFollow):
     deviationVector[1]*=-1
     print(deviationVector)
     print(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi))
-    return np.clip(int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi),45,135)
+    angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
+    angle = 90 - ((90 - angle) * 2)
+    return np.clip(angle,45,135)
 
 if __name__=="__main__":
     print(getCorrection(np.array((320,100)),[np.array((310,80)),np.array((320,90))]))

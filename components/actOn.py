@@ -9,6 +9,6 @@ time.sleep(1)
 def move(angle):
     ser.write(str(angle).encode())
     print(ser.readline())
-    ser.write(str("1565").encode())
+    ser.write(str("1500").encode())
     print(ser.readline())
 

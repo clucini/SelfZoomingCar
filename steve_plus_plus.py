@@ -1,9 +1,13 @@
 import components.seeforward as camera
-import components.quickLinearPathFinder as pathfinder
+import components.nullPathFinder as pathfinder
 import components.obstacledetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
+<<<<<<< HEAD
+import components.actOnfake as actOn
+=======
 import components.actOn as actOn
+>>>>>>> bc387b625a15834774b1d44bfff2c4b5d5466ae1
 import cv2
 
 def reciever(image):
