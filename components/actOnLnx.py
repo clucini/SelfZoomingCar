@@ -8,7 +8,12 @@ time.sleep(1)
 
 def move(angle):
     ser.write(str(angle).encode())
-    print(ser.readline())
-    ser.write(str("1555").encode())
-    print(ser.readline())
+    a = ser.readline().decode()
+    if a.strip() != str(angle):
+        print(a)
+    ser.write(str("1575").encode())
+    a = ser.readline().decode()
+    if a.strip() != "1575":
+        print(a)
+
 
