@@ -44,7 +44,7 @@ def amendPath(helper):
     obj_lower = (150, 60, 60)
     obj_upper = (170,255,255)
     obj_mask = cv2.inRange(hsv, obj_lower, obj_upper)
-    cv2.imshow("purpleboi",obj_mask)
+    #cv2.imshow("purpleboi",obj_mask)
     # Get contours
     cnts=cv2.findContours(obj_mask,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[0]
     # get contour with largest area
