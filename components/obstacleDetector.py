@@ -68,6 +68,9 @@ def amendPath(helper):
     ys=approx[:,:,1].reshape((approx.shape[0]))
     mins=ys.argsort()[-2:]
     minpts=approx[mins,:,:].reshape((2,2))
+    xs=minpts[:,0].reshape((minpts.shape[0]))
+    mins=xs.argsort()
+    minpts=minpts[mins]
     # Find blue and yellow corresponding points.
     blue_contours=helper['main_b_contour']
     yellow_contours=helper['main_y_contour']

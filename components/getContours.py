@@ -19,8 +19,8 @@ def get_c(helper):
     y_mask = cv2.inRange(hsv, y_lower, y_upper)
     b_mask = cv2.inRange(hsv, b_lower, b_upper)
 
-    cv2.imshow("b_mask", b_mask)
-    cv2.imshow("y_mask", y_mask)
+    #cv2.imshow("b_mask", b_mask)
+    #cv2.imshow("y_mask", y_mask)
 
     # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
     # hierarchy isn't in use, but if its not there, the function doesn't work.
