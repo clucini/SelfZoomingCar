@@ -1,0 +1,2 @@
+def getPathToFollow(image):
+    return [],[],[]
