@@ -1,5 +1,6 @@
 import components.seeforward as camera
 import components.quickLinearPathFinder as pathfinder
+import components.nullObstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.actOn as actOn
@@ -8,6 +9,8 @@ import cv2
 def reciever(image):
     # determine path to be followed in our coordinate frame
     pathToFollow, yellowpoints, bluepoints = pathfinder.getPathToFollow(image)
+    # determine a new path to follow taking into account obstacles
+    pathToFollow = obstacleDetector.amendPath(pathToFollow,image)
     # determine our location in our coordinate frame
     ourLocation = localiser.getOurLocation(image)
     # calculate any corrections
