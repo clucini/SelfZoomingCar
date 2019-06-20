@@ -10,11 +10,10 @@ import numpy as np
 # Mode switching from yellow-blue to blue-yellow?
 
 def find_overlaps(y_contours, b_contours):
+    print(y_contours)
+    print(b_contours)
     y_contours=y_contours[y_contours[:,1].argsort()]
     b_contours=b_contours[b_contours[:,1].argsort()]
-
-    y_counter = 0
-    b_counter = 0
 
     pairs = []
 
@@ -33,20 +32,28 @@ def find_overlaps(y_contours, b_contours):
     return pairs
 
 
-def getPathToFollow(main_y_contour, main_b_contour):
-    main_b_contour=np.reshape(main_b_contour,(main_b_contour.shape[0],main_b_contour.shape[2]))
-    main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))
-    pairs=find_overlaps(main_y_contour,main_b_contour)
-    parray=np.array(pairs)
+def getPathToFollow(helper):
+    main_b_contour = helper['main_b_contour']
+    main_y_contour = helper['main_y_contour']
+
+    pairs = find_overlaps(main_y_contour,main_b_contour)
+    
+    parray = np.array(pairs)
 
     if not parray.size == 0:
         bluepoints=np.reshape(parray[:,1,:],(parray.shape[0],2))
         yellowpoints=np.reshape(parray[:,0,:],(parray.shape[0],2))
         midpoints=(bluepoints+yellowpoints)/2
     else:
-        return None, None, None
+        helper['midpoints'] = None
+        helper['yellowpoints'] = None
+        helper['bluepoints'] = None
+        return False
 
-    return midpoints, yellowpoints, bluepoints
+    helper['midpoints'] = midpoints
+    helper['yellowpoints'] = yellowpoints
+    helper['bluepoints'] = bluepoints
+    return True
 
 if __name__== '__main__':
     img=cv2.imread("test.png")

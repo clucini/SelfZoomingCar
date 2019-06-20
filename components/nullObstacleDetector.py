@@ -1,2 +1,2 @@
-def amendPath(path,image):
-    return path
+def amendPath(helper):
+    return helper

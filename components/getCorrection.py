@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
-def getCorrection(ourLocation,pathToFollow, image=None):
+def getCorrection(helper):
+    ourLocation = helper['ourLocation']
+    pathToFollow = helper['midpoints']
+    image = helper['image']
     # Trim based on path
     radius=5
     minDist=10000
