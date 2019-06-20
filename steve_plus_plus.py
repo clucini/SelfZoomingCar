@@ -1,6 +1,6 @@
 import components.seeforward as camera
-import components.nullPathFinder as pathfinder
-import components.obstacledetector as obstacleDetector
+import components.quickLinearPathFinder as pathfinder
+import components.nullObstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.actOnfake as actOn
@@ -27,7 +27,7 @@ def reciever(image):
         else:
             print("uhoh")
     else:
-        correction = gc.getCorrection(ourLocation, pathToFollow)
+        correction = gc.getCorrection(ourLocation, pathToFollow,image)
         actOn.move(int(correction)) # physically adjust course, speed etc
         for e in pathToFollow:
             cv2.circle(image, (int(e[0]), int(e[1])), 4, (0, 0, 255))

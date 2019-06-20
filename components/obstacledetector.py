@@ -31,10 +31,10 @@ def amendPath(path,image):
     # Draw a line from edge to edge
     m=(minpts[0,1]-minpts[1,1])/(minpts[0,0]-minpts[1,0])
     b=minpts[0,1]-m*minpts[0,0]
-    leftborderpoint=[0,b]
-    rightborderpoint=[image.shape[0],m*image.shape[0]+b]
-    line=np.zeros(image.shape)
-    line=cv2.line(zeros,leftborderpoint,rightborderpoint,255,2)
+    leftborderpoint=[0,int(b)]
+    rightborderpoint=[image.shape[0],int(m*image.shape[0]+b)]
+    line=np.zeros(image.shape[:2])
+    line=cv2.line(line,tuple(leftborderpoint),tuple(rightborderpoint),255,2)
     # bitwise and it with our yellow and blue contours
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 80, 80)
@@ -47,13 +47,13 @@ def amendPath(path,image):
     y_mask = cv2.inRange(hsv, y_lower, y_upper)
     b_mask = cv2.inRange(hsv, b_lower, b_upper)
 
-    y_band = np.bitwise_and(y_mask,zeros)
-    firstNonzero=np.transpose(np.array(np.nonzero(y_band)))[0]
+    y_band = np.bitwise_and(y_mask.astype(int),line.astype(int))
+    firstNonzero=np.transpose(np.array(np.nonzero(y_band)))
+    if len(firstNonzero):
+        firstNonzero=firstNonzero[0]
+    else:
+        return path
     cv2.circle(image,tuple(firstNonzero),20,(0,255,255),-1)
-
-    y_band = np.bitwise_and(y_mask,zeros)
-    firstNonzero=np.transpose(np.array(np.nonzero(y_band)))[0]
-    cv2.circle(image,tuple(firstNonzero),10,255,-1)
 
     # Draw contours on image
     image=cv2.drawContours(image,[approx],-1,(255,0,0),-1)
