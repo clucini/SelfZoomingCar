@@ -28,7 +28,7 @@ def get_c(helper):
 
     if(b_contours):
         lowest_point = 0
-        p = -1
+        p = None
         q = -1
         for i in range(len(b_contours)):
             if len(b_contours[i]) < 20:
@@ -38,10 +38,10 @@ def get_c(helper):
                     lowest_point = b_contours[i][f][0][1]
                     p = i
                     q = f
-        
-        main_b_contour = b_contours[p]
-
-        b_y = b_contours[p][q][0][1]
+        if p:
+            main_b_contour = b_contours[p]
+            cv2.circle(helper['draw_image'], (b_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            b_y = b_contours[p][q][0][1]
 
     main_y_contour = None
     y_y = -1
@@ -58,12 +58,13 @@ def get_c(helper):
                     lowest_point = y_contours[i][f][0][1]
                     p = i
                     q = f
+        if p:
+            main_y_contour = y_contours[p]
+            cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            y_y = y_contours[p][q][0][1]
 
-        main_y_contour = y_contours[p]
-
-        # cv2.circle(c2, (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
-        y_y = y_contours[p][q][0][1]
-
+    cv2.drawContours(image, main_y_contour, -1, (0,255,0), 3)
+    cv2.drawContours(image, main_b_contour, -1, (0,255,0), 3)
 
     helper['main_y_contour'] = main_y_contour
     helper['main_b_contour'] = main_b_contour
@@ -71,8 +72,6 @@ def get_c(helper):
     if main_y_contour is None or main_b_contour is None:
         return None
 
-    cv2.drawContours(image, main_y_contour, -1, (0,255,0), 3)
-    cv2.drawContours(image, main_b_contour, -1, (0,255,0), 3)
 
     main_b_contour=np.reshape(main_b_contour,(main_b_contour.shape[0],main_b_contour.shape[2]))
     main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))

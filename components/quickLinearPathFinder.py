@@ -10,8 +10,6 @@ import numpy as np
 # Mode switching from yellow-blue to blue-yellow?
 
 def find_overlaps(y_contours, b_contours):
-    print(y_contours)
-    print(b_contours)
     y_contours=y_contours[y_contours[:,1].argsort()]
     b_contours=b_contours[b_contours[:,1].argsort()]
 

@@ -11,6 +11,7 @@ def reciever(image):
     #Get Contours
     helper = {}
     helper['image'] = image
+    helper['draw_image'] = image.copy()
     getContours.get_c(helper)
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         actOn.move(1500)
