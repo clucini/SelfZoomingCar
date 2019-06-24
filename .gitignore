@@ -1,7 +1,7 @@
 __pycache__/*
 components/__pycache__/*
 .vscode/settings.json
-
+.vscode
 *.pyc
 
 *.pyc

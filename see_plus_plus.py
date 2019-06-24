@@ -1,4 +1,8 @@
 import traceback
+import components.seeforward as camera
+import components.localiser as localiser
+import components.getCorrection as gc
+import components.obstacleDetector as obstacleDetector
 import components.quickLinearPathFinder as pathfinder
 import components.actOnMux as actOn
 import components.followLine as followLine

@@ -1,4 +1,4 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.pythonPath": "C:\\Users\\Nathan\\AppData\\Local\\Programs\\Python\\Python36\\python.exe"
+    "python.pythonPath": "/home/stevenliu/.pyenv/versions/3.6.0/bin/python"
 }

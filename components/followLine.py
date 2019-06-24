@@ -9,5 +9,6 @@ def follow(helper,blueOrYellow):
         cntr=helper['main_y_contour']
         delta=-10
     cntr=cntr.reshape((cntr.shape[0],2))
-    print (cntr)
+    cntr[:,0]+=delta
+    # get the first thing
     # clip pixels below a certain height
