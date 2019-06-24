@@ -5,8 +5,8 @@ import components.localiser as localiser
 import components.getCorrection as gc
 import components.actOnLnx as actOn
 import components.getContours as getContours
+import components.clean_contours as cc
 import components.videowrite as videowriter
-
 import cv2
 import numpy as np
 
@@ -17,7 +17,8 @@ def reciever(image):
     
     #Get Contours
     getContours.get_c(helper)
-    
+    cc.clean(helper)
+
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         ## this doesnt quite work
         actOn.move(1500)
