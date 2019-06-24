@@ -10,6 +10,7 @@ import components.getContours as getContours
 import components.clean_contours as cc
 import components.get_corner as gCorner
 import components.videowrite as videowriter
+import components.detectCorner as detectCorner
 import cv2
 import numpy as np
 
@@ -17,7 +18,7 @@ def reciever(image):
     helper = {}
     helper['image'] = image
     helper['draw_image'] = image.copy()
-    
+
     localiser.getOurLocation(helper)
     #Get Contours
     getContours.get_c(helper)
@@ -27,7 +28,7 @@ def reciever(image):
         ## this doesnt quite work
         actOn.move(1500)
         helper['midpoints'] = np.array([[0,image.shape[1]/2]])
-        print('Can\' see anything')
+        print('Can\'t see anything')
     elif helper['main_y_contour'] is None:
         followLine.follow(helper,'blue')
         helper['midpoints'] = np.array([[0,image.shape[1]]])
@@ -39,12 +40,12 @@ def reciever(image):
 
     else:
         pathfinder.getPathToFollow(helper)    # determine path to be followed in our coordinate frame
-    
+
     # determine a new path to follow taking into account obstacles
     obstacleDetector.amendPath(helper)
-    
+
     # determine our location in our coordinate frame
-    
+
     # calculate any corrections
     gc.getCorrection(helper)
 
@@ -55,7 +56,7 @@ def reciever(image):
     #Draw things for debug purposes
     for e in helper['midpoints']:
         cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
-    
+
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)

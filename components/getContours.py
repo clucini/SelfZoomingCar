@@ -93,4 +93,11 @@ def get_c(helper):
     helper['main_y_contour'] = main_y_contour
     helper['main_b_contour'] = main_b_contour
 
+    # contour gives an array with all the points in the image
+    # print('The main yellow: ')
+    # print(main_y_contour)
+    # print('The main blue: ')
+    # print(main_b_contour)
+
+
 
