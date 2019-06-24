@@ -1,9 +1,11 @@
+import traceback
 import components.seeforward as camera
 import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOnLnx as actOn
+import components.actOnMux as actOn
+import components.followLine as followLine
 import components.getContours as getContours
 import components.clean_contours as cc
 import components.videowrite as videowriter
@@ -25,9 +27,11 @@ def reciever(image):
         helper['midpoints'] = np.array([[0,image.shape[1]/2]])
         print('Can\' see anything')
     elif helper['main_y_contour'] is None:
+        followLine.follow(helper,'blue')
         helper['midpoints'] = np.array([[0,image.shape[1]]])
         print('Can\'t see yellow')
     elif helper['main_b_contour'] is None:
+        followLine.follow(helper,'yellow')
         helper['midpoints'] = np.array([[0,0]])
         print('Can\'t see blue')
 
@@ -41,7 +45,7 @@ def reciever(image):
     localiser.getOurLocation(helper)
     
     # calculate any corrections
-    correction = gc.getCorrection(helper)
+    gc.getCorrection(helper)
 
     # physically adjust course, speed etc
     actOn.move(int(helper['correction']))
@@ -57,6 +61,7 @@ def reciever(image):
         return -1
     else:
          return 0
+    return 0
 
 
 # The main loop starts in topdown.
@@ -70,4 +75,9 @@ try:
     videowriter.close()
 except Exception as e:
     print(e)
+    traceback.print_exc()
     videowriter.close()
+
+
+## TODO:
+# Stop when no lines detected

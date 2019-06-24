@@ -1,4 +1,6 @@
 
 .vscode/settings.json
 *.pyc
-outpy.avi
+original.avi
+debug.avi
+vids

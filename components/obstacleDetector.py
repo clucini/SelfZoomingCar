@@ -48,7 +48,7 @@ def amendPath(helper):
     # Get contours
     cnts=cv2.findContours(obj_mask,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[0]
     # get contour with largest area
-    la=0
+    la=300
     laobj=None
     for i in cnts:
         ca=cv2.contourArea(i)
