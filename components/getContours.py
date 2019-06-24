@@ -4,6 +4,12 @@ import numpy as np
 
 def get_c(helper):
     image = helper['image']
+    
+    yellow_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
+    blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), helper['ourLocation'][0].astype(int):helper['ourLocation'][0].astype(int)*2]
+    
+    hsv_yellow = cv2.cvtColor(yellow_im, cv2.COLOR_BGR2HSV)
+    hsv_blue = cv2.cvtColor(blue_im, cv2.COLOR_BGR2HSV)
     # Converts the remaining image from RGB to HSV
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     helper['hsv']=hsv # i need this for later
@@ -16,16 +22,19 @@ def get_c(helper):
     y_upper = (30, 255, 255)
 
     # Get blue and yellow sections (thanks claudio)
-    y_mask = cv2.inRange(hsv, y_lower, y_upper)
-    b_mask = cv2.inRange(hsv, b_lower, b_upper)
-
+    y_mask = cv2.inRange(hsv_yellow, y_lower, y_upper)
+    b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
+    
+    cv2.imshow('y_mask', y_mask)
+    
+    cv2.imshow('b_mask', b_mask)
     #cv2.imshow("b_mask", b_mask)
     #cv2.imshow("y_mask", y_mask)
 
     # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
     # hierarchy isn't in use, but if its not there, the function doesn't work.
-    b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     
     main_b_contour = None
     b_y = -1
@@ -55,7 +64,7 @@ def get_c(helper):
         p = -1
         q = -1
         for i in range(len(y_contours)):
-            if len(y_contours[i]) < 10:
+            if len(y_contours[i]) < 200:
                 continue
             for f in range(len(y_contours[i])):
                 if y_contours[i][f][0][1] > lowest_point:
