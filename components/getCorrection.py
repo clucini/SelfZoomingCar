@@ -27,7 +27,7 @@ def getCorrection(helper):
     angle = 90 - ((90 - angle) * 2)
     if not image is None:
         helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
-    return np.clip(angle,45,135)
+    helper['correction']=np.clip(angle,45,135)
 
 if __name__=="__main__":
     print(getCorrection(np.array((320,100)),[np.array((310,80)),np.array((320,90))]))

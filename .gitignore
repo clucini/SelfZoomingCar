@@ -1,3 +1,12 @@
 
 .vscode/settings.json
+
 *.pyc
+
+*.pyc
+*.cpython-36.pyc
+
+components/*.pyc
+original.avi
+debug.avi
+vids
