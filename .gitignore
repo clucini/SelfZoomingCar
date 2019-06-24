@@ -6,3 +6,6 @@
 *.pyc
 
 components/*.pyc
+original.avi
+debug.avi
+vids

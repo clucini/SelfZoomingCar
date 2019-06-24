@@ -1,12 +1,15 @@
-import components.camforward as camera
+import traceback
+import components.cameraForward as camera
 import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOnfake as actOn
+import components.actOnMux as actOn
+import components.followLine as followLine
 import components.getContours as getContours
 import components.clean_contours as cc
 import components.get_corner as gCorner
+import components.videowrite as videowriter
 import cv2
 import numpy as np
 
@@ -26,9 +29,11 @@ def reciever(image):
         helper['midpoints'] = np.array([[0,image.shape[1]/2]])
         print('Can\' see anything')
     elif helper['main_y_contour'] is None:
+        followLine.follow(helper,'blue')
         helper['midpoints'] = np.array([[0,image.shape[1]]])
         print('Can\'t see yellow')
     elif helper['main_b_contour'] is None:
+        followLine.follow(helper,'yellow')
         helper['midpoints'] = np.array([[0,0]])
         print('Can\'t see blue')
 
@@ -41,20 +46,24 @@ def reciever(image):
     # determine our location in our coordinate frame
     
     # calculate any corrections
-    correction = gc.getCorrection(helper)
+    gc.getCorrection(helper)
 
     # physically adjust course, speed etc
-    actOn.move(int(correction))
     gCorner.get_corner(helper)
+    actOn.move(int(helper['correction']))
 
-    print(helper['midpoints'])
     #Draw things for debug purposes
     for e in helper['midpoints']:
         cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
     
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
-    cv2.waitKey(1)
+    videowriter.writeToFile(helper)
+    if cv2.waitKey(1) == 'q':
+        return -1
+    else:
+         return 0
+    return 0
 
 
 # The main loop starts in topdown.
@@ -63,4 +72,14 @@ def reciever(image):
 camera.sendImageTo(reciever)
 
 # Start the program
-camera.start()
+try:
+    camera.start()
+    videowriter.close()
+except Exception as e:
+    print(e)
+    traceback.print_exc()
+    videowriter.close()
+
+
+## TODO:
+# Stop when no lines detected
