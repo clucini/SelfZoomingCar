@@ -88,7 +88,8 @@ def amendPath(helper):
     else:
         yellodist=0
     # find the distance between blues and yellows and choose one
-    
+    if (bluedist == yellodist ==0):
+        return
     if bluedist<yellodist:
         result=yelloresult
     else:

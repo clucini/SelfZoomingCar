@@ -3,8 +3,10 @@ import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOn as actOn
+import components.actOnLnx as actOn
 import components.getContours as getContours
+import components.videowrite as videowriter
+
 import cv2
 import numpy as np
 
@@ -41,8 +43,7 @@ def reciever(image):
     correction = gc.getCorrection(helper)
 
     # physically adjust course, speed etc
-    actOn.move(int(correction))
-
+    actOn.move(int(helper['correction']))
 
     #Draw things for debug purposes
     for e in helper['midpoints']:
@@ -50,7 +51,11 @@ def reciever(image):
     
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
-    cv2.waitKey(1)
+    videowriter.writeToFile(helper)
+    if cv2.waitKey(1) == 'q':
+        return -1
+    else:
+         return 0
 
 
 # The main loop starts in topdown.
@@ -59,4 +64,9 @@ def reciever(image):
 camera.sendImageTo(reciever)
 
 # Start the program
-camera.start()
+try:
+    camera.start()
+    videowriter.close()
+except Exception as e:
+    print(e)
+    videowriter.close()

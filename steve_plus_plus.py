@@ -3,7 +3,7 @@ import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOnLnx as actOn
+import components.actOnfake as actOn
 import components.getContours as getContours
 import cv2
 import numpy as np
