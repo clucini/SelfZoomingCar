@@ -16,6 +16,9 @@ def getCorrection(helper):
     #just to initialise
     targetPoint=ourLocation
     centre=np.array((0,1))
+    if pathToFollow is None:
+        helper['correction']=90
+        return
     for i in pathToFollow:
         dist=np.linalg.norm(i-ourLocation)
         if dist>radius and dist<minDist:

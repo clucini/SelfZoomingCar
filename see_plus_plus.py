@@ -1,5 +1,5 @@
 import traceback
-import components.seeforward as camera
+import components.cameraPlayback as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
@@ -22,7 +22,7 @@ def reciever(image):
     localiser.getOurLocation(helper)
     #Get Contours
     getContours.get_c(helper)
-    cc.clean(helper)
+    #cc.clean(helper)
 
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         ## this doesnt quite work
@@ -37,26 +37,29 @@ def reciever(image):
         followLine.follow(helper,'yellow')
         helper['midpoints'] = np.array([[0,0]])
         print('Can\'t see blue')
-
     else:
         pathfinder.getPathToFollow(helper)    # determine path to be followed in our coordinate frame
+        print('Normal operation')
+    
+    if not helper['midpoints'] is None:
+        print("everything is ok")
+        # determine a new path to follow taking into account obstacles
+        obstacleDetector.amendPath(helper)
 
-    # determine a new path to follow taking into account obstacles
-    obstacleDetector.amendPath(helper)
+        # determine our location in our coordinate frame
 
-    # determine our location in our coordinate frame
+        # calculate any corrections
+        gc.getCorrection(helper)
 
-    # calculate any corrections
-    gc.getCorrection(helper)
+        # physically adjust course, speed etc
+        gCorner.get_corner(helper)
+        actOn.move(int(helper['correction']))
+        #Draw things for debug purposes
+        for e in helper['midpoints']:
+            cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
 
-    # physically adjust course, speed etc
-    gCorner.get_corner(helper)
-    actOn.move(int(helper['correction']))
-
-    #Draw things for debug purposes
-    for e in helper['midpoints']:
-        cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
-
+    else:
+        actOn.move(90)
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)

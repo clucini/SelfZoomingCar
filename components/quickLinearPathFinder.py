@@ -14,11 +14,10 @@ def find_overlaps(y_contours, b_contours):
     b_contours=b_contours[b_contours[:,1].argsort()]
 
     pairs = []
-
     for i in range(0, len(y_contours)):
         lastdiff = 100000
         f = 0
-        if i % np.floor(10/len(y_contours)) != 0:
+        if i % np.floor(len(y_contours)/10) != 0:
             continue
         while abs(y_contours[i][1] - b_contours[f][1]) <= lastdiff:
             lastdiff = abs(y_contours[i][1] - b_contours[f][1])
@@ -33,7 +32,6 @@ def find_overlaps(y_contours, b_contours):
 def getPathToFollow(helper):
     main_b_contour = helper['main_b_contour']
     main_y_contour = helper['main_y_contour']
-
     pairs = find_overlaps(main_y_contour,main_b_contour)
     
     parray = np.array(pairs)
