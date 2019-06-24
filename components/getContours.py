@@ -6,7 +6,8 @@ def get_c(helper):
     image = helper['image']
     
     blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
-    yellow_im = image.copy()[0:helper['ourLocation'][1].astype(int), helper['ourLocation'][0].astype(int):helper['ourLocation'][0].astype(int)*2]
+    yellow_im = image.copy()
+    yellow_im[0:helper['ourLocation'][1].astype(int),:helper['ourLocation'][0].astype(int)] = 0
     
     hsv_yellow = cv2.cvtColor(yellow_im, cv2.COLOR_BGR2HSV)
     hsv_blue = cv2.cvtColor(blue_im, cv2.COLOR_BGR2HSV)

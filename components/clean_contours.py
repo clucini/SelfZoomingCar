@@ -20,12 +20,12 @@ def clean(helper):
         main_b_contour = main_b_contour[int(len(main_b_contour)/2):]
 
         for e in main_b_contour:
-            cv2.circle(helper['draw_image'], (e[0], e[1]), 4, (0, 0, 255))
+           cv2.circle(helper['draw_image'], (e[0], e[1]), 4, (0, 0, 255))
             
     if main_y_contour is not None:
         main_y_contour = main_y_contour[:int(len(main_y_contour)/2)]
 
         for e in main_y_contour:
-            cv2.circle(helper['draw_image'], (e[0], e[1]), 4, (0, 0, 255))
+           cv2.circle(helper['draw_image'], (e[0], e[1]), 4, (0, 0, 255))
     
         
