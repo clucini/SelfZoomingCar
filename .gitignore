@@ -11,3 +11,4 @@ components/*.pyc
 original.avi
 debug.avi
 vids
+.vscode/settings.json

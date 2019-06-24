@@ -17,7 +17,7 @@ def get_c(helper):
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 70, 100)
-    b_upper = (115, 255, 180)
+    b_upper = (115, 255, 255)
 
     y_lower = (15, 75, 150)
     y_upper = (30, 255, 250)
@@ -29,8 +29,6 @@ def get_c(helper):
     cv2.imshow('y_mask', y_mask)
     cv2.waitKey(1)
     cv2.imshow('b_mask', b_mask)
-    #cv2.imshow("b_mask", b_mask)
-    #cv2.imshow("y_mask", y_mask)
 
     # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
     # hierarchy isn't in use, but if its not there, the function doesn't work.
