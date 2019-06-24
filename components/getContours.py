@@ -26,7 +26,7 @@ def get_c(helper):
     b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
     
     cv2.imshow('y_mask', y_mask)
-    
+    cv2.waitKey(1)
     cv2.imshow('b_mask', b_mask)
     #cv2.imshow("b_mask", b_mask)
     #cv2.imshow("y_mask", y_mask)
