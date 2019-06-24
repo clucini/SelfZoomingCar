@@ -6,8 +6,6 @@ import math
 # FUNCTION
 # Corner detect
 
-
-
 def detectCorner(helper):
     
     # get values from helper 
