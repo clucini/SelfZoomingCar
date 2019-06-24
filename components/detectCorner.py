@@ -49,9 +49,9 @@ def detectCorner(helper):
 
     if finalRise < 0:
         negativeRiseFlag = 1
-        print('Going back')
-    else: 
         print('Going forward')
+    else: 
+        print('Going back')
     if finalRun < 0:
         negativeRunFlag = 1
         print('Going Left')
