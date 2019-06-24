@@ -1,6 +1,7 @@
 
 .vscode/settings.json
 *.pyc
+*.cpython-36.pyc
 original.avi
 debug.avi
 vids

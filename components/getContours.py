@@ -10,10 +10,10 @@ def get_c(helper):
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 70, 100)
-    b_upper = (115, 255, 255)
+    b_upper = (115, 255, 180)
 
     y_lower = (15, 75, 150)
-    y_upper = (30, 255, 255)
+    y_upper = (30, 255, 250)
 
     # Get blue and yellow sections (thanks claudio)
     y_mask = cv2.inRange(hsv, y_lower, y_upper)
