@@ -9,3 +9,4 @@ components/__pycache__/*
 
 components/*.pyc
 vids
+.vscode/settings.json
