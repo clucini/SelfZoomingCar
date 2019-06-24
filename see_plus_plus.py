@@ -1,5 +1,5 @@
 import traceback
-import components.cameraForward as camera
+import components.cameraPlayback as camera
 import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser

@@ -8,7 +8,7 @@ def sendImageTo(func):
     global func_to_send_to
     func_to_send_to = func
 def start():
-    cap = cv2.VideoCapture('vids/outpy.avi')
+    cap = cv2.VideoCapture('vids/original.mp4')
 
     while(True):
         # Capture frame-by-frame
@@ -16,6 +16,7 @@ def start():
 
         # send
         func_to_send_to(frame)
+        cv2.waitKey(0)
 
     # When everything done, release the capture
     cap.release()

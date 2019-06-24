@@ -5,8 +5,8 @@ import numpy as np
 def get_c(helper):
     image = helper['image']
     
-    blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
-    yellow_im = image.copy()[0:helper['ourLocation'][1].astype(int), helper['ourLocation'][0].astype(int):helper['ourLocation'][0].astype(int)*2]
+    yellow_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
+    blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), helper['ourLocation'][0].astype(int):helper['ourLocation'][0].astype(int)*2]
     
     hsv_yellow = cv2.cvtColor(yellow_im, cv2.COLOR_BGR2HSV)
     hsv_blue = cv2.cvtColor(blue_im, cv2.COLOR_BGR2HSV)
@@ -15,16 +15,20 @@ def get_c(helper):
     helper['hsv']=hsv # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
-    b_lower = (100, 60, 100)
-    b_upper = (115, 255, 255)
+    b_lower = (100, 70, 100)
+    b_upper = (115, 255, 180)
 
     y_lower = (15, 75, 150)
-    y_upper = (30, 255, 255)
+    y_upper = (30, 255, 250)
 
     # Get blue and yellow sections (thanks claudio)
     y_mask = cv2.inRange(hsv_yellow, y_lower, y_upper)
     b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
     
+    #kernel = np.ones((2,2),np.uint8)
+    #y_mask = cv2.morphologyEx(y_mask, cv2.MORPH_OPEN, kernel)
+    #b_mask = cv2.morphologyEx(b_mask, cv2.MORPH_OPEN, kernel)
+
     cv2.imshow('y_mask', y_mask)
     cv2.waitKey(1)
     cv2.imshow('b_mask', b_mask)
