@@ -22,7 +22,7 @@ def reciever(image):
     localiser.getOurLocation(helper)
     #Get Contours
     getContours.get_c(helper)
-    #cc.clean(helper)
+    cc.clean(helper)
 
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         ## this doesnt quite work
