@@ -3,10 +3,10 @@ components/__pycache__/*
 .vscode/settings.json
 .vscode
 *.pyc
-
-*.pyc
 *.cpython-36.pyc
-
 components/*.pyc
 vids
-.vscode/settings.json
+*.avi
+*.mp4
+.vscode/*
+*.json
