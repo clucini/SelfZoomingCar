@@ -3,8 +3,9 @@ import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOn as actOn
+import components.actOnfake as actOn
 import components.getContours as getContours
+import components.detectCorner as detectCorner
 import cv2
 import numpy as np
 
@@ -20,7 +21,7 @@ def reciever(image):
         ## this doesnt quite work
         actOn.move(1500)
         helper['midpoints'] = np.array([[0,image.shape[1]/2]])
-        print('Can\' see anything')
+        print('Can\'t see anything')
     elif helper['main_y_contour'] is None:
         helper['midpoints'] = np.array([[0,image.shape[1]]])
         print('Can\'t see yellow')
@@ -43,6 +44,8 @@ def reciever(image):
     # physically adjust course, speed etc
     actOn.move(int(correction))
 
+    # simply reads the middle point and gives angle
+    angle = detectCorner.detectCorner(helper)
 
     #Draw things for debug purposes
     for e in helper['midpoints']:

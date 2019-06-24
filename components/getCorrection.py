@@ -1,5 +1,11 @@
 import numpy as np
 import cv2
+
+# FUNCTION getCorrection(helper)
+# gets the difference between the two edge points and gives us the line in the middle
+
+
+
 def getCorrection(helper):
     ourLocation = helper['ourLocation']
     pathToFollow = helper['midpoints']
