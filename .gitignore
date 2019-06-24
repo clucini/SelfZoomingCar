@@ -10,3 +10,4 @@ components/*.pyc
 original.avi
 debug.avi
 vids
+*.mp4

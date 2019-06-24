@@ -39,12 +39,12 @@ def detectCorner(helper):
 
         angle = math.atan(rise/run)
         angleList.append(angle)
-        print('This is angle: ')
-        print(angle)
+        # print('This is angle: ')
+        # print(angle)
 
     angleAvg = np.mean(angleList)
-    print('AVERAGE ANGLE: ')
-    print(angleAvg)
+    # print('AVERAGE ANGLE: ')
+    # print(angleAvg)
 
     inc += 1
     

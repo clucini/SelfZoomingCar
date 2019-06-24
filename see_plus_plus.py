@@ -1,5 +1,5 @@
 import traceback
-import components.cameraForward as camera
+import components.seeforward as camera
 import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
@@ -43,6 +43,9 @@ def reciever(image):
 
     # determine a new path to follow taking into account obstacles
     obstacleDetector.amendPath(helper)
+
+    # detect corner
+    avgAngle = detectCorner.detectCorner(helper)
 
     # determine our location in our coordinate frame
 
