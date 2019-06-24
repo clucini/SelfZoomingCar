@@ -1,5 +1,5 @@
 import traceback
-import components.seeforward as camera
+import components.cameraForward as camera
 import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
@@ -8,6 +8,7 @@ import components.actOnMux as actOn
 import components.followLine as followLine
 import components.getContours as getContours
 import components.clean_contours as cc
+import components.get_corner as gCorner
 import components.videowrite as videowriter
 import cv2
 import numpy as np
@@ -17,6 +18,7 @@ def reciever(image):
     helper['image'] = image
     helper['draw_image'] = image.copy()
     
+    localiser.getOurLocation(helper)
     #Get Contours
     getContours.get_c(helper)
     cc.clean(helper)
@@ -42,12 +44,12 @@ def reciever(image):
     obstacleDetector.amendPath(helper)
     
     # determine our location in our coordinate frame
-    localiser.getOurLocation(helper)
     
     # calculate any corrections
     gc.getCorrection(helper)
 
     # physically adjust course, speed etc
+    gCorner.get_corner(helper)
     actOn.move(int(helper['correction']))
 
     #Draw things for debug purposes
