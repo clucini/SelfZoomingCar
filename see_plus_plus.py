@@ -4,6 +4,8 @@ import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
+import components.obstacleDetector as obstacleDetector
+import components.quickLinearPathFinder as pathfinder
 import components.actOnMux as actOn
 import components.followLine as followLine
 import components.getContours as getContours

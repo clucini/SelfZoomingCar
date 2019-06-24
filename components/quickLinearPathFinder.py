@@ -18,7 +18,7 @@ def find_overlaps(y_contours, b_contours):
     for i in range(0, len(y_contours)):
         lastdiff = 100000
         f = 0
-        if i % 20 != 0:
+        if i % np.floor(10/len(y_contours)) != 0:
             continue
         while abs(y_contours[i][1] - b_contours[f][1]) <= lastdiff:
             lastdiff = abs(y_contours[i][1] - b_contours[f][1])

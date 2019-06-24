@@ -5,9 +5,8 @@ import numpy as np
 def get_c(helper):
     image = helper['image']
     
-    blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
-    yellow_im = image.copy()
-    yellow_im[0:helper['ourLocation'][1].astype(int),:helper['ourLocation'][0].astype(int)] = 0
+    yellow_im = image.copy()[0:helper['ourLocation'][1].astype(int), 0:helper['ourLocation'][0].astype(int)]
+    blue_im = image.copy()[0:helper['ourLocation'][1].astype(int), helper['ourLocation'][0].astype(int):helper['ourLocation'][0].astype(int)*2]
     
     hsv_yellow = cv2.cvtColor(yellow_im, cv2.COLOR_BGR2HSV)
     hsv_blue = cv2.cvtColor(blue_im, cv2.COLOR_BGR2HSV)
@@ -17,18 +16,24 @@ def get_c(helper):
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
     b_lower = (100, 70, 100)
-    b_upper = (115, 255, 255)
+    b_upper = (115, 255, 180)
 
     y_lower = (15, 75, 150)
-    y_upper = (30, 255, 255)
+    y_upper = (30, 255, 250)
 
     # Get blue and yellow sections (thanks claudio)
     y_mask = cv2.inRange(hsv_yellow, y_lower, y_upper)
     b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
     
+    #kernel = np.ones((2,2),np.uint8)
+    #y_mask = cv2.morphologyEx(y_mask, cv2.MORPH_OPEN, kernel)
+    #b_mask = cv2.morphologyEx(b_mask, cv2.MORPH_OPEN, kernel)
+
     cv2.imshow('y_mask', y_mask)
     cv2.waitKey(1)
     cv2.imshow('b_mask', b_mask)
+    #cv2.imshow("b_mask", b_mask)
+    #cv2.imshow("y_mask", y_mask)
 
     # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
     # hierarchy isn't in use, but if its not there, the function doesn't work.
@@ -91,12 +96,5 @@ def get_c(helper):
 
     helper['main_y_contour'] = main_y_contour
     helper['main_b_contour'] = main_b_contour
-
-    # contour gives an array with all the points in the image
-    # print('The main yellow: ')
-    # print(main_y_contour)
-    # print('The main blue: ')
-    # print(main_b_contour)
-
 
 
