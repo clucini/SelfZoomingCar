@@ -3,26 +3,32 @@ import numpy as np
 import cv2
 import math
 
+# FUNCTION
+# gets the image from the realsense camera and sends it back
+# 
+
+
+
 # Configure depth and color streams
 # Create a pipeline
 i = 0
-print(i)
+print(i)            # prints 0?
 i += 1
 
 pipeline = rs.pipeline()
-print(i)
+print(i)            # prints 1?
 i += 1
 
 #Create a config and configure the pipeline to stream
 config = rs.config()
 config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 
-print(i)
+print(i)            # prints 2?
 i += 1
 # Start streaming
 profile = pipeline.start(config)
 
-print(i)
+print(i)            # prints 3?
 i += 1
 func_to_send_to = None
 

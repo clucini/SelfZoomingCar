@@ -5,6 +5,7 @@ components/__pycache__/*
 *.pyc
 
 *.pyc
+*.cpython-36.pyc
 
 components/*.pyc
 original.avi
