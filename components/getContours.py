@@ -24,8 +24,8 @@ def get_c(helper):
 
     # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
     # hierarchy isn't in use, but if its not there, the function doesn't work.
-    b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    b_contours, hierarchy = cv2.findContours(b_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    y_contours, hierarchy = cv2.findContours(y_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
     main_b_contour = None
     b_y = -1
@@ -67,8 +67,7 @@ def get_c(helper):
             #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
 
-    cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
-    cv2.drawContours(helper['draw_image'], main_b_contour, -1, (0,255,0), 3)
+    # cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
 
     if main_y_contour is not None: 
         main_y_contour=np.reshape(main_y_contour,(main_y_contour.shape[0],main_y_contour.shape[2]))

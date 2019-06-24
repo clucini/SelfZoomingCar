@@ -3,8 +3,9 @@ import components.quickLinearPathFinder as pathfinder
 import components.obstacleDetector as obstacleDetector
 import components.localiser as localiser
 import components.getCorrection as gc
-import components.actOn as actOn
+import components.actOnfake as actOn
 import components.getContours as getContours
+import components.clean_contours as cc
 import cv2
 import numpy as np
 
@@ -15,7 +16,8 @@ def reciever(image):
     
     #Get Contours
     getContours.get_c(helper)
-    
+    cc.clean(helper)
+
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         ## this doesnt quite work
         actOn.move(1500)
@@ -43,7 +45,7 @@ def reciever(image):
     # physically adjust course, speed etc
     actOn.move(int(correction))
 
-
+    print(helper['midpoints'])
     #Draw things for debug purposes
     for e in helper['midpoints']:
         cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
