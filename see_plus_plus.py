@@ -5,42 +5,45 @@ import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
 import components.quickLinearPathFinder as pathfinder
 import components.actOnMux as actOn
-import components.followLine as followLine
+import components.followGradient as followLine
 import components.getContours as getContours
-import components.clean_contours as cc
+import components.clean_contours_slow as cc
 import components.get_corner as gCorner
 import components.videowrite as videowriter
 import components.detectCorner as detectCorner
 import cv2
 import numpy as np
 
-def reciever(image):
-    helper = {}
-    helper['image'] = image
+
+def reciever(helper):
+    helper['speed']=1570
+    helper['correction']=90
+    image = helper['image']
     helper['draw_image'] = image.copy()
 
     localiser.getOurLocation(helper)
-    #Get Contours
+    # Get Contours
     getContours.get_c(helper)
     cc.clean(helper)
 
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
-        ## this doesnt quite work
-        actOn.move(1500)
-        helper['midpoints'] = np.array([[0,image.shape[1]/2]])
+        # this doesnt quite work
+        actOn.move(helper)
+        helper['midpoints'] = np.array([[0, image.shape[1]/2]])
         print('Can\'t see anything')
     elif helper['main_y_contour'] is None:
-        followLine.follow(helper,'blue')
-        helper['midpoints'] = np.array([[0,image.shape[1]]])
+        helper['midpoints'] = np.array([[0, image.shape[1]]])
+        followLine.follow(helper, 'blue')
         print('Can\'t see yellow')
     elif helper['main_b_contour'] is None:
-        followLine.follow(helper,'yellow')
-        helper['midpoints'] = np.array([[0,0]])
+        helper['midpoints'] = np.array([[0, 0]])
+        followLine.follow(helper, 'yellow')
         print('Can\'t see blue')
     else:
-        pathfinder.getPathToFollow(helper)    # determine path to be followed in our coordinate frame
+        # determine path to be followed in our coordinate frame
+        pathfinder.getPathToFollow(helper)
         print('Normal operation')
-    
+
     if not helper['midpoints'] is None:
         print(detectCorner.detectCorner(helper))
 
@@ -55,13 +58,14 @@ def reciever(image):
 
         # physically adjust course, speed etc
         gCorner.get_corner(helper)
-        actOn.move(int(helper['correction']))
-        #Draw things for debug purposes
+        actOn.move(helper)
+        # Draw things for debug purposes
         for e in helper['midpoints']:
-            cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
+            cv2.circle(helper['draw_image'],
+                       (int(e[0]), int(e[1])), 4, (0, 0, 255))
 
     else:
-        actOn.move(90)
+        actOn.move(helper)
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)
@@ -69,7 +73,7 @@ def reciever(image):
     if cv2.waitKey(1) == 'q':
         return -1
     else:
-         return 0
+        return 0
     return 0
 
     
@@ -90,5 +94,5 @@ except Exception as e:
     videowriter.close()
 
 
-## TODO:
+# TODO:
 # Stop when no lines detected

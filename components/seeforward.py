@@ -55,8 +55,9 @@ def start():
 
         #Crops the top half of the image
         c2 = c2[160:720, 0:1280]
-        if func_to_send_to(c2) != 0:
-            break
+        helper={}
+        helper['image']=c2
+        func_to_send_to(helper)
         #cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         #cv2.imshow('Edges', edges)
         #cv2.imshow('mask', o)

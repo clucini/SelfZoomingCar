@@ -15,7 +15,9 @@ def start():
         ret, frame = cap.read()
 
         # send
-        func_to_send_to(frame)
+        helper={}
+        helper['image']=frame
+        func_to_send_to(helper)
 
     # When everything done, release the capture
     cap.release()

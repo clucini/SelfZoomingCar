@@ -45,14 +45,14 @@ if not noPort:
 
 time.sleep(1)
 
-def move(angle):
+def move(helper):
     if not noPort:
-        ser.write(str(angle).encode())
+        ser.write(str(helper['correction']).encode())
         a = ser.readline().decode()
-        if a.strip() != str(angle):
+        if a.strip() != str(helper['correction']):
             print(a)
-        ser.write(str("1570").encode())
+        ser.write(str(helper['speed']).encode())
         a = ser.readline().decode()
-        if a.strip() != "1570":
+        if a.strip() != str(helper['speed']):
             print(a)
 
