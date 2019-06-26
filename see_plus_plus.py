@@ -53,6 +53,7 @@ def reciever(helper):
         # calculate any corrections
         gc.getCorrection(helper)
 
+        # detecting corner: gives which direction we are headed in and prints the angle
         if helper['main_y_contour'] is not None and helper['main_b_contour'] is not None:
             print(detectCorner.detectCorner(helper))
 
