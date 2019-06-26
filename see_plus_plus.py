@@ -22,6 +22,7 @@ def reciever(helper):
     helper['draw_image'] = image.copy()
 
     localiser.getOurLocation(helper)
+
     # Get Contours
     getContours.get_c(helper)
     cc.clean(helper)
@@ -30,6 +31,7 @@ def reciever(helper):
         # this doesnt quite work
         helper['midpoints'] = np.array([[0, image.shape[1]/2]])
         print('Can\'t see anything')
+        helper['speed'] = 1500              # stops vehicle when it sees nothing
     elif helper['main_y_contour'] is None:
         helper['midpoints'] = np.array([[0, image.shape[1]]])
         followLine.follow(helper, 'blue')
@@ -45,6 +47,7 @@ def reciever(helper):
 
     if not helper['midpoints'] is None:
         print("everything is ok")
+
         # determine a new path to follow taking into account obstacles
         obstacleDetector.amendPath(helper)
 
@@ -53,13 +56,15 @@ def reciever(helper):
         # calculate any corrections
         gc.getCorrection(helper)
 
+        # detecting corner: gives which direction we are headed in and prints the angle
         if helper['main_y_contour'] is not None and helper['main_b_contour'] is not None:
             print(detectCorner.detectCorner(helper))
 
         # physically adjust course, speed etc
-        gCorner.get_corner(helper)
-        print('a')
+        gCorner.get_corner(helper)          # draws a white line 
+
         actOn.move(helper)
+
         # Draw things for debug purposes
         for e in helper['midpoints']:
             cv2.circle(helper['draw_image'],
@@ -68,10 +73,12 @@ def reciever(helper):
     else:
         actOn.move(helper)
 
+    # display on the image
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)
     
+    # exit image (doesnt work)
     if cv2.waitKey(1) == 'q':
         return -1
     else:
