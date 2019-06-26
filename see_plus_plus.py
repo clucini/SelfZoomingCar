@@ -7,16 +7,18 @@ import components.quickLinearPathFinder as pathfinder
 import components.actOnMux as actOn
 import components.followGradient as followLine
 import components.getContours as getContours
-import components.clean_contours_slow as cc
+import components.clean_contours as cc
 import components.get_corner as gCorner
-import components.videowrite as videowriter
+#import components.videowrite as videowriter
 import components.detectCorner as detectCorner
 import cv2
 import numpy as np
 
-
+memory={}
+memory['reverse']=0
 def reciever(helper):
-    helper['speed']=1570
+    global memory
+    helper['speed']=1590
     helper['correction']=90
     image = helper['image']
     helper['draw_image'] = image.copy()
@@ -25,11 +27,20 @@ def reciever(helper):
     # Get Contours
     getContours.get_c(helper)
     cc.clean(helper)
-
+    if memory['reverse']<0:
+        memory['reverse']+=1
+    elif memory['reverse']>0:
+        helper['speed']=1400
+        actOn.move(helper)
+        memory['reverse']-=1
+        return
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
-        # this doesnt quite work
-        helper['midpoints'] = np.array([[0, image.shape[1]/2]])
-        print('Can\'t see anything')
+        # Be careful
+        helper['midpoints']=None
+        helper['speed'] = 1420
+        memory['reverse']-=5
+        if memory['reverse']<-20:
+            memory['reverse']=20
     elif helper['main_y_contour'] is None:
         helper['midpoints'] = np.array([[0, image.shape[1]]])
         followLine.follow(helper, 'blue')
@@ -66,15 +77,15 @@ def reciever(helper):
 
     else:
         actOn.move(helper)
-    cv2.imshow("uneditted", image)
-    cv2.imshow("drawn", helper['draw_image'])
-    videowriter.writeToFile(helper)
+    #cv2.imshow("uneditted", image)
+    #cv2.imshow("drawn", helper['draw_image'])
+ #   videowriter.writeToFile(helper)
     
-    if cv2.waitKey(1) == 'q':
-        return -1
-    else:
-        return 0
-    return 0
+   # if cv2.waitKey(1) == 'q':
+   #     return -1
+   # else:
+   #     return 0
+   # return 0
 
     
 
@@ -87,11 +98,11 @@ camera.sendImageTo(reciever)
 # Start the program
 try:
     camera.start()
-    videowriter.close()
+#    videowriter.close()
 except Exception as e:
     print(e)
     traceback.print_exc()
-    videowriter.close()
+#    videowriter.close()
 
 
 # TODO:
