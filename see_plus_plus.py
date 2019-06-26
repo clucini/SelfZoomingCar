@@ -1,5 +1,5 @@
 import traceback
-import components.cameraPlayback as camera
+import components.seeforward as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
@@ -56,7 +56,7 @@ def reciever(image):
         actOn.move(int(helper['correction']))
         #Draw things for debug purposes
         for e in helper['midpoints']:
-            cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 0, 255))
+            cv2.circle(helper['draw_image'], (int(e[0]), int(e[1])), 4, (0, 255, 0))
 
     else:
         actOn.move(90)
