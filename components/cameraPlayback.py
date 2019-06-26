@@ -8,7 +8,7 @@ def sendImageTo(func):
     global func_to_send_to
     func_to_send_to = func
 def start():
-    cap = cv2.VideoCapture('vids/sanename.avi')
+    cap = cv2.VideoCapture('vids/sane2.mp4')
 
     while(True):
         # Capture frame-by-frame

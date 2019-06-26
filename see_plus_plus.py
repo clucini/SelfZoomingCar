@@ -28,7 +28,6 @@ def reciever(helper):
 
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         # this doesnt quite work
-        actOn.move(helper)
         helper['midpoints'] = np.array([[0, image.shape[1]/2]])
         print('Can\'t see anything')
     elif helper['main_y_contour'] is None:
