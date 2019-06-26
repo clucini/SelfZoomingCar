@@ -24,18 +24,6 @@ def detectCorner(helper):
         rise = currMidpoint[inc+1][1] - i[1]
         run = currMidpoint[inc+1][0] - i[0]
 
-        # if rise < 0:
-        #     negativeRiseFlag = 1
-        #     print('Going back')
-        # else: 
-        #     print('Going forward')
-        # if run < 0:
-        #     negativeRunFlag = 1
-        #     print('Going Left')
-        # else:
-        #     print('Going Right')
-        
-        
         runList.append(run)
         riseList.append(rise)
         angle = math.atan(rise/run)
