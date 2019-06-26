@@ -8,6 +8,8 @@ origVid=None
 num_files = len(os.listdir('vids')) / 2
 
 def writeToFile(helper):
+    if 'playback' in helper:
+        return
     global debugVid
     global origVid
     # make the directory if it does not exist

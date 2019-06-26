@@ -16,16 +16,17 @@ def get_c(helper):
     helper['hsv']=hsv # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
-    b_lower = (100, 70, 100)
+    b_lower = (100, 60, 100)
     b_upper = (115, 255, 255)
 
-    y_lower = (15, 75, 150)
+    y_lower = (15, 65, 150)
     y_upper = (30, 255, 255)
 
     # Get blue and yellow sections (thanks claudio)
     y_mask = cv2.inRange(hsv_yellow, y_lower, y_upper)
     b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
-    
+    helper['b_mask']=b_mask
+    helper['y_mask']=y_mask
     cv2.imshow('y_mask', y_mask)
     cv2.waitKey(1)
     cv2.imshow('b_mask', b_mask)
@@ -72,10 +73,11 @@ def get_c(helper):
                     q = f
         if p is not None:
             main_y_contour = y_contours[p]
-            cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
 
     cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
+    cv2.drawContours(helper['draw_image'], main_b_contour, -1, (0,255,0), 3)
 
     minSize=helper['image'].shape[0]*helper['image'].shape[1]*50/648/480 # 50 pixels in 640/480 resolution; more in higher resolution
     if main_y_contour is not None: 
