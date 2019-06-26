@@ -14,6 +14,8 @@ import components.detectCorner as detectCorner
 import cv2
 import numpy as np
 import os
+import time
+
 
 memory = {}
 memory['reverse'] = 0
@@ -32,8 +34,8 @@ except FileNotFoundError:
     print("no env...")
     pass
     # Keep preset values
-
-
+memory['time']=time.time()
+memory['minfps']=100
 def reciever(helper):
     global memory
     helper['speed'] = 1590
@@ -42,7 +44,12 @@ def reciever(helper):
     image = helper['image']
     if helper['debug']:
         helper['draw_image'] = image.copy()
-
+    fps=1/(time.time()-memory['time'])
+    print ("FPS:{0}".format(fps))
+    if fps<memory['minfps']:
+        memory['minfps']=fps
+    print ("minFPS:{0}".format(memory['minfps']))
+    memory['time']=time.time()
     localiser.getOurLocation(helper)
 
     # Get Contours
