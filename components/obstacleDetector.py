@@ -31,6 +31,39 @@ def find_overlaps(y_contours, b_contours):
 
     return pairs
 
+def find_rightmost(contour):
+    cur_r = 0
+    cur_e = None
+
+    for e in contour:
+        if e[0] > cur_r:
+            cur_r = e[0]
+            cur_e = e
+    return cur_e
+
+def find_leftmost(contour):
+    cur_r = 100000
+    cur_e = None
+
+    for e in contour:
+        if e[0] < cur_r:
+            cur_r = e[0]
+            cur_e = e
+    return cur_e
+
+
+# This is some interesting code
+# To the best of my understanding, it forms 2 triangles, and if they follow in opposite directions, the lines intersect
+# https://stackoverflow.com/questions/3838329/how-can-i-check-if-two-segments-intersect
+# http://www.bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+def ccw(A,B,C):
+    return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+
+# Return true if line segments AB and CD intersect
+def intersect(A,B,C,D):
+    return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)
+
+
 # pushes us to the mdipoint
 def amendPath(helper):
     # Converts the remaining image from RGB to HSV
@@ -55,13 +88,48 @@ def amendPath(helper):
     # if no obstacles, break
     if laobj is None or la<40:
         return
+
     laobj=np.reshape(laobj,(laobj.shape[0],laobj.shape[2]))
+
+    if helper['main_b_contour'] is not None:
+        b_right = find_rightmost(helper['main_b_contour'])
+        cv2.circle(helper['draw_image'], tuple(b_right), 4, (0,125,255), thickness=5)
+   
+        b_left = find_leftmost(helper['main_b_contour'])
+        cv2.circle(helper['draw_image'], tuple(b_left), 4, (0,125,255), thickness=5)
+
+        cv2.line(helper['draw_image'], tuple(b_left), tuple(b_right), (0,125,255), thickness=3)
+
+        o_right = find_rightmost(laobj)
+        cv2.circle(helper['draw_image'], tuple(o_right), 4, (0,125,255), thickness=5)
+
+        cv2.line(helper['draw_image'], tuple(o_right), tuple(helper['ourLocation']), (0,125,255), thickness=3)
+
+        if(intersect(b_right, b_left, o_right, helper['ourLocation'])):
+            print("Obstacle behind blue")
+            return
+        
+
+    if helper['main_y_contour'] is not None:
+        y_right = find_rightmost(helper['main_y_contour'])
+        cv2.circle(helper['draw_image'], tuple(y_right), 4, (255,0,125), thickness=5)
+   
+        y_left = find_leftmost(helper['main_y_contour'])
+        cv2.circle(helper['draw_image'], tuple(y_left), 4, (255,0,125), thickness=5)
+
+        cv2.line(helper['draw_image'], tuple(y_left), tuple(y_right), (255,0,125), thickness=3)
+
+        o_left = find_leftmost(laobj)
+        cv2.circle(helper['draw_image'], tuple(o_left), 4, (255,0,125), thickness=5)
+
+        cv2.line(helper['draw_image'], tuple(o_left), tuple(helper['ourLocation']), (255,0,125), thickness=3)
+
+        if(intersect(y_right, y_left, o_left, helper['ourLocation'])):
+            print("Obstacle behind yellow")
+            return
 
     if np.amax(laobj[:, 1]) < helper['ourLocation'][1]/4:
         return
-    # for e in laobj:
-    # if not inside:
-        # return
 
 
     # Approximate contour to square

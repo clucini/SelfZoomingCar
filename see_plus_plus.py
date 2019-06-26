@@ -1,10 +1,10 @@
 import traceback
-import components.seeforward as camera
+import components.cameraPlayback as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
 import components.quickLinearPathFinder as pathfinder
-import components.actOnMux as actOn
+import components.actOnfake as actOn
 import components.followGradient as followLine
 import components.getContours as getContours
 import components.clean_contours_slow as cc
@@ -58,6 +58,7 @@ def reciever(helper):
 
         # physically adjust course, speed etc
         gCorner.get_corner(helper)
+        print('a')
         actOn.move(helper)
         # Draw things for debug purposes
         for e in helper['midpoints']:
@@ -66,6 +67,7 @@ def reciever(helper):
 
     else:
         actOn.move(helper)
+
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)
