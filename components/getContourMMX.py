@@ -57,7 +57,8 @@ def get_c(helper):
                     q = f
         if p is not None:
             main_b_contour = b_contours[p]
-            cv2.circle(helper['draw_image'], (b_contours[p][q][0][0], b_contours[p][q][0][1]), 4, (255, 0, 255))
+            if helper['debug']:
+                cv2.circle(helper['draw_image'], (b_contours[p][q][0][0], b_contours[p][q][0][1]), 4, (255, 0, 255))
             b_y = b_contours[p][q][0][1]
 
     main_y_contour = None

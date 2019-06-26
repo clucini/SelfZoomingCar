@@ -34,7 +34,7 @@ def getCorrection(helper):
     deviationVector[1]*=-1
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
-    if not image is None:
+    if not image is None and helper['debug']:
         helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
     helper['correction']=np.clip(angle,45,135)
 

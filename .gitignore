@@ -10,3 +10,4 @@ vids
 *.mp4
 .vscode/*
 *.json
+env
