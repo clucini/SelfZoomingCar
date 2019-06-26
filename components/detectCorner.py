@@ -10,6 +10,7 @@ def detectCorner(helper):
     
     # get values from helper 
     currMidpoint = helper['midpoints']
+    fiveMid = helper['midpoints'][5:10]
     # image = helper['image']
 
     angleList = []
@@ -33,7 +34,8 @@ def detectCorner(helper):
     #     print('in loop', i)
     # print('Out loop')
 
-
+    sumRun = np.sum(runList)
+    sumRise = np.sum(riseList)
     finalRun = np.mean(runList)
     finalRise = np.mean(riseList)
 
@@ -51,7 +53,11 @@ def detectCorner(helper):
 
     angleList = [x for x in angleList if str(x) != 'nan']
     
+    angleAvgSum = math.atan(sumRise/sumRun)
     angleAvg = np.mean(angleList)
+    print(np.rad2deg(angleAvgSum))
+    print(np.rad2deg(angleAvg))
+
     # print('AVERAGE ANGLE: ')
     # print(angleAvg)
 
