@@ -20,7 +20,7 @@ def start():
         helper['image']=frame
         helper['playback']=True
         func_to_send_to(helper)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
 
     # When everything done, release the capture
     cap.release()

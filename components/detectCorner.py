@@ -27,7 +27,7 @@ def detectCorner(helper):
         # finds the angle of each pair of rise and run and stores into angleList
         runList.append(run)
         riseList.append(rise)
-        angle = np.aectan2(rise,run)
+        angle = np.arctan2(rise,run)
         angleList.append(angle)
 
     sumRun = np.sum(runList)
