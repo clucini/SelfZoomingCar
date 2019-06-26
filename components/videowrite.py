@@ -10,6 +10,8 @@ import datetime
 startTime=str(datetime.datetime.now()) 
 
 def writeToFile(helper):
+    if 'playback' in helper:
+        return
     global debugVid
     global origVid
     # make the directory if it does not exist

@@ -15,7 +15,10 @@ def start():
         ret, frame = cap.read()
 
         # send
-        func_to_send_to(frame)
+        helper={}
+        helper['image']=frame
+        helper['playback']=True
+        func_to_send_to(helper)
         cv2.waitKey(0)
 
     # When everything done, release the capture
