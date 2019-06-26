@@ -30,6 +30,8 @@ def detectCorner(helper):
         angleList.append(angle)
         # print('This is angle: ')
         # print(angle)
+    #     print('in loop', i)
+    # print('Out loop')
 
 
     finalRun = np.mean(runList)
@@ -45,16 +47,18 @@ def detectCorner(helper):
         print('Going Left')
     else:
         print('Going Right')
+        negativeRunFlag = 0
 
-
+    angleList = [x for x in angleList if str(x) != 'nan']
+    
     angleAvg = np.mean(angleList)
     # print('AVERAGE ANGLE: ')
     # print(angleAvg)
 
     inc += 1
-    
+        
 
-    return angleAvg
+    return np.rad2deg(angleAvg)
 
 # INCOMPLETE
 
