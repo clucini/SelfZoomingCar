@@ -4,7 +4,6 @@ import numpy as np
 # TODO: 
 # if the obstacle is outside the track.
 
-
 # finds the midpoint of the thing
 def find_overlaps(y_contours, b_contours):
     y_contours=y_contours[y_contours[:,1].argsort()]
@@ -32,12 +31,6 @@ def find_overlaps(y_contours, b_contours):
 
     return pairs
 
-
-
-
-
-
-
 # pushes us to the mdipoint
 def amendPath(helper):
     # Converts the remaining image from RGB to HSV
@@ -57,9 +50,20 @@ def amendPath(helper):
         if ca>la:
             laobj=i
             la=ca
+
+    
     # if no obstacles, break
     if laobj is None or la<40:
         return
+    laobj=np.reshape(laobj,(laobj.shape[0],laobj.shape[2]))
+
+    if np.amax(laobj[:, 1]) < helper['ourLocation'][1]/4:
+        return
+    # for e in laobj:
+    # if not inside:
+        # return
+
+
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
@@ -96,7 +100,6 @@ def amendPath(helper):
         result=yelloresult
     else:
         result=blueresult
-   
 
     helper['midpoints'] = [result]
     
