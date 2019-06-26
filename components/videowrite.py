@@ -5,7 +5,11 @@ import os
 debugVid=None
 origVid=None
 # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-num_files = len(os.listdir('vids')) / 2
+try:
+    num_files = len(os.listdir('vids')) / 2
+except Exception:
+    os.mkdir("vids")
+    num_files=0
 
 def writeToFile(helper):
     if 'playback' in helper:

@@ -93,17 +93,14 @@ def amendPath(helper):
 
     if helper['main_b_contour'] is not None:
         b_right = find_rightmost(helper['main_b_contour'])
-        cv2.circle(helper['draw_image'], tuple(b_right), 4, (0,125,255), thickness=5)
-   
         b_left = find_leftmost(helper['main_b_contour'])
-        cv2.circle(helper['draw_image'], tuple(b_left), 4, (0,125,255), thickness=5)
-
-        cv2.line(helper['draw_image'], tuple(b_left), tuple(b_right), (0,125,255), thickness=3)
-
         o_right = find_rightmost(laobj)
-        cv2.circle(helper['draw_image'], tuple(o_right), 4, (0,125,255), thickness=5)
-
-        cv2.line(helper['draw_image'], tuple(o_right), tuple(helper['ourLocation']), (0,125,255), thickness=3)
+        if helper['debug']:
+            cv2.circle(helper['draw_image'], tuple(b_right), 4, (0,125,255), thickness=5)
+            cv2.circle(helper['draw_image'], tuple(b_left), 4, (0,125,255), thickness=5)
+            cv2.line(helper['draw_image'], tuple(b_left), tuple(b_right), (0,125,255), thickness=3)
+            cv2.circle(helper['draw_image'], tuple(o_right), 4, (0,125,255), thickness=5)
+            cv2.line(helper['draw_image'], tuple(o_right), tuple(helper['ourLocation']), (0,125,255), thickness=3)
 
         if(intersect(b_right, b_left, o_right, helper['ourLocation'])):
             print("Obstacle behind blue")
@@ -112,17 +109,14 @@ def amendPath(helper):
 
     if helper['main_y_contour'] is not None:
         y_right = find_rightmost(helper['main_y_contour'])
-        cv2.circle(helper['draw_image'], tuple(y_right), 4, (255,0,125), thickness=5)
-   
         y_left = find_leftmost(helper['main_y_contour'])
-        cv2.circle(helper['draw_image'], tuple(y_left), 4, (255,0,125), thickness=5)
-
-        cv2.line(helper['draw_image'], tuple(y_left), tuple(y_right), (255,0,125), thickness=3)
-
         o_left = find_leftmost(laobj)
-        cv2.circle(helper['draw_image'], tuple(o_left), 4, (255,0,125), thickness=5)
-
-        cv2.line(helper['draw_image'], tuple(o_left), tuple(helper['ourLocation']), (255,0,125), thickness=3)
+        if helper['debug']:
+            cv2.circle(helper['draw_image'], tuple(y_right), 4, (255,0,125), thickness=5)
+            cv2.circle(helper['draw_image'], tuple(y_left), 4, (255,0,125), thickness=5)
+            cv2.line(helper['draw_image'], tuple(y_left), tuple(y_right), (255,0,125), thickness=3)
+            cv2.circle(helper['draw_image'], tuple(o_left), 4, (255,0,125), thickness=5)
+            cv2.line(helper['draw_image'], tuple(o_left), tuple(helper['ourLocation']), (255,0,125), thickness=3)
 
         if(intersect(y_right, y_left, o_left, helper['ourLocation'])):
             print("Obstacle behind yellow")
@@ -135,10 +129,11 @@ def amendPath(helper):
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
-    # Draw contours on image
-    drawImg=helper['draw_image']
-    # drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),3)
-    drawImg=cv2.drawContours(drawImg,[laobj],-1,(255,0,0),-1)
+    if helper['debug']:
+        # Draw contours on image
+        drawImg=helper['draw_image']
+        # drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),3)
+        drawImg=cv2.drawContours(drawImg,[laobj],-1,(255,0,0),-1)
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
     mins=ys.argsort()[-2:]
@@ -170,6 +165,6 @@ def amendPath(helper):
         result=blueresult
 
     helper['midpoints'] = [result]
-    
-    cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
+    if helper['debug']:
+        cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
     return
