@@ -44,8 +44,6 @@ def reciever(helper):
         print('Normal operation')
 
     if not helper['midpoints'] is None:
-        print(detectCorner.detectCorner(helper))
-
         print("everything is ok")
         # determine a new path to follow taking into account obstacles
         obstacleDetector.amendPath(helper)
@@ -54,6 +52,9 @@ def reciever(helper):
 
         # calculate any corrections
         gc.getCorrection(helper)
+
+        if helper['main_y_contour'] is not None and helper['main_b_contour'] is not None:
+            print(detectCorner.detectCorner(helper))
 
         # physically adjust course, speed etc
         gCorner.get_corner(helper)
