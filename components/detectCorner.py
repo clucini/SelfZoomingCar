@@ -1,7 +1,6 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-import math
 
 # FUNCTION
 # Corner detect
@@ -28,7 +27,7 @@ def detectCorner(helper):
         # finds the angle of each pair of rise and run and stores into angleList
         runList.append(run)
         riseList.append(rise)
-        angle = math.atan(rise/run)
+        angle = np.aectan2(rise,run)
         angleList.append(angle)
 
     sumRun = np.sum(runList)
@@ -48,7 +47,7 @@ def detectCorner(helper):
     angleList = [x for x in angleList if str(x) != 'nan']
     
     # calculate average agnle by either the averaging the list, or angle from sum
-    angleSum = math.atan(sumRise/sumRun)
+    angleSum = np.arctan2(sumRise,sumRun)
     angleAvg = np.mean(angleList)
     print(np.rad2deg(angleSum))
 
