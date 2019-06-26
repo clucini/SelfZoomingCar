@@ -73,10 +73,10 @@ def get_c(helper):
                     q = f
         if p is not None:
             main_y_contour = y_contours[p]
-            #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
 
-    # cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
+    cv2.drawContours(helper['draw_image'], main_y_contour, -1, (0,255,0), 3)
 
     minSize=helper['image'].shape[0]*helper['image'].shape[1]*50/648/480 # 50 pixels in 640/480 resolution; more in higher resolution
     if main_y_contour is not None: 

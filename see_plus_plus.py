@@ -1,5 +1,5 @@
 import traceback
-import components.cameraPlayback as camera
+import components.seeforward as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
@@ -45,6 +45,8 @@ def reciever(helper):
         print('Normal operation')
 
     if not helper['midpoints'] is None:
+        print(detectCorner.detectCorner(helper))
+
         print("everything is ok")
         # determine a new path to follow taking into account obstacles
         obstacleDetector.amendPath(helper)
@@ -67,11 +69,14 @@ def reciever(helper):
     cv2.imshow("uneditted", image)
     cv2.imshow("drawn", helper['draw_image'])
     videowriter.writeToFile(helper)
+    
     if cv2.waitKey(1) == 'q':
         return -1
     else:
         return 0
     return 0
+
+    
 
 
 # The main loop starts in topdown.
