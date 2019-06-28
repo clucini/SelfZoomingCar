@@ -4,17 +4,14 @@ import numpy as np
 
 def get_c(helper):
     image = helper['image']
-
-    blue_im = image.copy()[0:helper['ourLocation'][1].astype(
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv_blue = hsv[0:helper['ourLocation'][1].astype(
         int), 0:helper['ourLocation'][0].astype(int)]
-    yellow_im = image.copy()
-    yellow_im[0:helper['ourLocation'][1].astype(
+    hsv_yellow = hsv.copy()
+    hsv_yellow[0:helper['ourLocation'][1].astype(
         int), :helper['ourLocation'][0].astype(int)] = 0
 
-    hsv_yellow = cv2.cvtColor(yellow_im, cv2.COLOR_BGR2HSV)
-    hsv_blue = cv2.cvtColor(blue_im, cv2.COLOR_BGR2HSV)
     # Converts the remaining image from RGB to HSV
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     helper['hsv'] = hsv  # i need this for later
 
     # Upper and lower bounds for the lines of tape (thanks claudio)
@@ -48,13 +45,15 @@ def get_c(helper):
         p = None
         q = -1
         for i in range(len(b_contours)):
-            if len(b_contours[i]) < 10:
+            if len(b_contours[i]) < 50:
                 continue
-            for f in range(len(b_contours[i])):
-                if b_contours[i][f][0][1] > lowest_point:
-                    lowest_point = b_contours[i][f][0][1]
-                    p = i
-                    q = f
+            # use np for this instead of python loops
+            this_lowest_index=np.argmin(b_contours[i][:,0,1])
+            this_lowest_pt=b_contours[i][this_lowest_index,0,1]
+            if this_lowest_pt > lowest_point:
+                lowest_point = this_lowest_pt
+                p = i
+                q = this_lowest_index
         if p is not None:
             main_b_contour = b_contours[p]
             if helper['debug']:
@@ -70,13 +69,15 @@ def get_c(helper):
         p = -1
         q = -1
         for i in range(len(y_contours)):
-            if len(y_contours[i]) < 200:
+            if len(y_contours[i]) < 50:
                 continue
-            for f in range(len(y_contours[i])):
-                if y_contours[i][f][0][1] > lowest_point:
-                    lowest_point = y_contours[i][f][0][1]
-                    p = i
-                    q = f
+            # use np for this instead of python loops
+            this_lowest_index=np.argmin(y_contours[i][:,0,1])
+            this_lowest_pt=y_contours[i][this_lowest_index,0,1]
+            if this_lowest_pt > lowest_point:
+                lowest_point = this_lowest_pt
+                p = i
+                q = this_lowest_index
         if p is not None:
             main_y_contour = y_contours[p]
             #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
