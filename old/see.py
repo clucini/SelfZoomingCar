@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import math
 import serialtest as st
-
+import time
 # Configure depth and color streams
 # Create a pipeline
 pipeline = rs.pipeline()
@@ -40,10 +40,11 @@ high_speed = 1585
 
 #Sets the starting speed, this hardly lasts, because it gets overwritten very quickly
 #st.move(str(int(1565)))
-
+oldTime=time.time()
 try:
     while True:
-
+        delta=time.time()-oldTime()
+        print (1/delta)
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
         color_frame = frames.get_color_frame()

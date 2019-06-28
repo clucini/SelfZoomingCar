@@ -87,7 +87,7 @@ def amendPath(helper):
     
     # if no obstacles, break
     if laobj is None or la<40:
-        return
+        return False
 
     laobj=np.reshape(laobj,(laobj.shape[0],laobj.shape[2]))
 
@@ -104,7 +104,7 @@ def amendPath(helper):
 
         if(intersect(b_right, b_left, o_right, helper['ourLocation'])):
             print("Obstacle behind blue")
-            return
+            return False
         
 
     if helper['main_y_contour'] is not None:
@@ -120,10 +120,10 @@ def amendPath(helper):
 
         if(intersect(y_right, y_left, o_left, helper['ourLocation'])):
             print("Obstacle behind yellow")
-            return
+            return False
 
     if np.amax(laobj[:, 1]) < helper['ourLocation'][1]/4:
-        return
+        return False
 
 
     # Approximate contour to square
@@ -158,13 +158,22 @@ def amendPath(helper):
         yellodist=0
     # find the distance between blues and yellows and choose one
     if (bluedist == yellodist ==0):
-        return
+        return False
     if bluedist<yellodist:
         result=yelloresult
     else:
         result=blueresult
-
     helper['midpoints'] = [result]
+    ## now set the angle
+
+    deviationVector=result-ourLocation
+    deviationVector[1]*=-1
+    angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
+    angle = 90 - ((90 - angle) * 2)
+    if not image is None and helper['debug']:
+        helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
+    helper['correction']=np.clip(angle,45,135)
+
     if helper['debug']:
         cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
-    return
+    return True
