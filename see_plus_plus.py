@@ -1,5 +1,5 @@
 import traceback
-import components.cameraPlayback as camera
+import components.seeforward as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
@@ -26,6 +26,7 @@ try:
     with open('env', 'r') as fh:
         whereamI = fh.readline()
         if "live" in whereamI:
+            print("env with live...")
             memory['debug'] = False
         else:
             print(whereamI)
@@ -41,7 +42,7 @@ memory['itercount']=0
 
 def reciever(helper):
     global memory
-    helper['speed'] = 1590
+    helper['speed'] = 1570
     helper['correction'] = 90
     helper['debug'] = memory['debug']
     image = helper['image']

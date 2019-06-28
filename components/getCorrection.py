@@ -24,10 +24,10 @@ def getCorrection(helper):
         helper['correction']=90
         return
 
-    temp = (helper['b_y'] - helper['y_y'])
+    temp = (helper['b_y'] - helper['y_y']) *  0.3
 
     # Centers the difference on 90 degrees
-    angle = 90 + temp
+    angle = 90 - temp
 
     #Full lock cases.
     if angle > 135:
@@ -42,7 +42,8 @@ def getCorrection(helper):
     length = 100
     x =  int((center[0]) + length * -np.cos(angle * 3.1415 / 180.0))
     y =  int((center[1]) + length * -np.sin(angle * 3.1415 / 180.0))
-    cv2.line(helper['draw_image'], tuple(center), (x,y), (255,255,255), thickness=3)
+    if helper['debug']:
+        cv2.line(helper['draw_image'], tuple(center), (x,y), (255,255,255), thickness=3)
 
     return
 
