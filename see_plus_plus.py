@@ -1,5 +1,5 @@
 import traceback
-import components.seeforward as camera
+import components.cameraPlayback as camera
 import components.localiser as localiser
 import components.getCorrection as gc
 import components.obstacleDetector as obstacleDetector
@@ -38,6 +38,7 @@ memory['time']=time.time()
 memory['minfps']=100
 memory['totfps']=0
 memory['itercount']=0
+
 def reciever(helper):
     global memory
     helper['speed'] = 1590
@@ -51,7 +52,7 @@ def reciever(helper):
     if fps<memory['minfps']:
         memory['minfps']=fps
     print ("minFPS:{0}".format(memory['minfps']))
-    memory['itercount']+=1;
+    memory['itercount']+=1
     memory['totfps']+=fps
     print("avgfps:{0}".format(memory['totfps']/memory['itercount']))
     memory['time']=time.time()
