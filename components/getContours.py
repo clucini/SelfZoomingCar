@@ -48,7 +48,7 @@ def get_c(helper):
             if len(b_contours[i]) < 50:
                 continue
             # use np for this instead of python loops
-            this_lowest_index=np.argmin(b_contours[i][:,0,1])
+            this_lowest_index=np.argmax(b_contours[i][:,0,1])
             this_lowest_pt=b_contours[i][this_lowest_index,0,1]
             if this_lowest_pt > lowest_point:
                 lowest_point = this_lowest_pt
@@ -60,9 +60,10 @@ def get_c(helper):
                 cv2.circle(helper['draw_image'], (b_contours[p][q]
                                                   [0][0], b_contours[p][q][0][1]), 4, (255, 0, 255))
             b_y = b_contours[p][q][0][1]
-
+    
     main_y_contour = None
     y_y = -1
+
 
     if(y_contours):
         lowest_point = 0
@@ -72,7 +73,7 @@ def get_c(helper):
             if len(y_contours[i]) < 50:
                 continue
             # use np for this instead of python loops
-            this_lowest_index=np.argmin(y_contours[i][:,0,1])
+            this_lowest_index=np.argmax(y_contours[i][:,0,1])
             this_lowest_pt=y_contours[i][this_lowest_index,0,1]
             if this_lowest_pt > lowest_point:
                 lowest_point = this_lowest_pt
@@ -82,6 +83,10 @@ def get_c(helper):
             main_y_contour = y_contours[p]
             #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
             y_y = y_contours[p][q][0][1]
+
+    helper['y_y'] = y_y
+    helper['b_y'] = b_y
+
     if helper['debug']:
         cv2.drawContours(helper['draw_image'],
                          main_y_contour, -1, (0, 255, 0), 3)
