@@ -48,7 +48,7 @@ def get_c(helper):
             if len(b_contours[i]) < 50:
                 continue
             # use np for this instead of python loops
-            this_lowest_index=np.argmin(b_contours[i][:,0,1])
+            this_lowest_index=np.argmax(b_contours[i][:,0,1])
             this_lowest_pt=b_contours[i][this_lowest_index,0,1]
             if this_lowest_pt > lowest_point:
                 lowest_point = this_lowest_pt
@@ -73,7 +73,7 @@ def get_c(helper):
             if len(y_contours[i]) < 50:
                 continue
             # use np for this instead of python loops
-            this_lowest_index=np.argmin(y_contours[i][:,0,1])
+            this_lowest_index=np.argmax(y_contours[i][:,0,1])
             this_lowest_pt=y_contours[i][this_lowest_index,0,1]
             if this_lowest_pt > lowest_point:
                 lowest_point = this_lowest_pt

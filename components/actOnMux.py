@@ -21,6 +21,7 @@ def serial_ports():
         raise EnvironmentError('Unsupported platform')
 
     result = []
+    print ("Available ports: {0}".format(ports))
     for port in ports:
         try:
             s = serial.Serial(port)
