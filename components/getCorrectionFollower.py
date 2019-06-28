@@ -11,7 +11,7 @@ def getCorrection(helper):
         helper['correction']=90
         return
     bntr=np.array(helper['midpoints'])
-    print (bntr.shape)
+    # print (bntr.shape)
     belta = bntr[1:,:]-bntr[:-1,:]
     # eliminate level points
     belta=belta[np.nonzero(belta[:,1])]

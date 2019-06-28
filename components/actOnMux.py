@@ -32,8 +32,6 @@ def serial_ports():
     return result
 
 
-print(serial_ports())
-
 noPort=False
 availablePorts = serial_ports()
 if len(availablePorts)==0:
@@ -46,14 +44,20 @@ if not noPort:
 
 time.sleep(1)
 
-def move(helper):
-    if not noPort:
-        ser.write(str(helper['correction']).encode())
-        a = ser.readline().decode()
-        if a.strip() != str(helper['correction']):
-            print(a)
-        ser.write(str(helper['speed']).encode())
-        a = ser.readline().decode()
-        if a.strip() != str(helper['speed']):
-            print(a)
-
+def move(memory):
+    
+    while True:
+        if not noPort:
+            ser.write(str(int(memory['angle'])).encode())
+            a = ser.readline().decode()
+            if a.strip() != str(int(memory['angle'])):
+                print('Angle Read Incorrectly:', a.strip())
+                print('Angle Read Expected:', memory['angle'])
+            ser.write(str(1565).encode())
+            a = ser.readline().decode()
+            if a.strip() != str(1565):
+                print('Speed Read Incorrectly:', a.strip())
+                print('Speed Read Expect:', '1560')
+            print('')
+        else:
+            time.sleep(1)
