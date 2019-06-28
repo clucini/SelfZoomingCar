@@ -59,6 +59,7 @@ def reciever(helper):
 
     # Get Contours
     getContours.get_c(helper)
+    print ("gcnt t:{0}".format(time.time()))
     #cc.clean(helper)
     if memory['reverse'] < 0:
         memory['reverse'] += 1
@@ -86,6 +87,8 @@ def reciever(helper):
     else:
         # determine path to be followed in our coordinate frame
         pathfinder.getPathToFollow(helper)
+        print ("pf t:{0}".format(time.time()))
+
         print('Normal operation')
 
     if not helper['midpoints'] is None:
@@ -93,15 +96,18 @@ def reciever(helper):
 
         # determine a new path to follow taking into account obstacles
         obstacleDetector.amendPath(helper)
+        print ("od t:{0}".format(time.time()))
 
         # determine our location in our coordinate frame
 
         # calculate any corrections
         gc.getCorrection(helper)
+        print ("gc t:{0}".format(time.time()))
 
         # detecting corner: gives which direction we are headed in and prints the angle
         if helper['main_y_contour'] is not None and helper['main_b_contour'] is not None:
             print(detectCorner.detectCorner(helper))
+
 
         # physically adjust course, speed etc
         # gCorner.get_corner(helper)          # draws a white line
@@ -114,6 +120,8 @@ def reciever(helper):
 
     else:
         actOn.move(helper)
+    print ("ao t:{0}".format(time.time()))
+
     memory['lastAngle'] = helper['correction']
     if (memory['debug']):
         # display on the image

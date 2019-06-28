@@ -28,12 +28,29 @@ def find_overlaps(y_contours, b_contours):
         pairs.append((y_contours[i],b_contours[f-1]))
     return pairs
 
+def find_lowest(contour):
+    cur_r = 0
+    cur_e = None
+
+    for e in contour:
+        if e[1] > cur_r:
+            cur_r = e[1]
+            cur_e = e
+    return cur_e
+
 
 def getPathToFollow(helper):
     main_b_contour = helper['main_b_contour']
     main_y_contour = helper['main_y_contour']
     pairs = find_overlaps(main_y_contour,main_b_contour)
-    
+
+    b_lowest = find_lowest(helper['main_b_contour'])
+    y_lowest = find_lowest(helper['main_y_contour'])
+
+    cv2.line(helper['draw_image'], tuple(b_lowest), tuple(y_lowest), (255,255,255), thickness=1)
+    cv2.circle(helper['draw_image'], tuple(((b_lowest+y_lowest)/2).astype(int)), 3, (0,0,255), thickness=3)
+
+
     parray = np.array(pairs)
 
     if not parray.size == 0:

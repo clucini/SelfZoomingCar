@@ -1,7 +1,6 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-import math
 
 # FUNCTION
 # Corner detect
@@ -10,6 +9,7 @@ def detectCorner(helper):
     
     # get values from helper 
     currMidpoint = helper['midpoints']
+    fiveMid = helper['midpoints'][5:10]
     # image = helper['image']
 
     angleList = []
@@ -24,24 +24,18 @@ def detectCorner(helper):
         rise = currMidpoint[inc+1][1] - i[1]
         run = currMidpoint[inc+1][0] - i[0]
 
+        # finds the angle of each pair of rise and run and stores into angleList
         runList.append(run)
         riseList.append(rise)
-        angle = math.atan(rise/run)
+        angle = np.arctan2(rise,run)
         angleList.append(angle)
-        # print('This is angle: ')
-        # print(angle)
-    #     print('in loop', i)
-    # print('Out loop')
 
-
+    sumRun = np.sum(runList)
+    sumRise = np.sum(riseList)
     finalRun = np.mean(runList)
     finalRise = np.mean(riseList)
 
-    if finalRise < 0:
-        negativeRiseFlag = 1
-        print('Going forward')
-    else: 
-        print('Going back')
+    # using positive/negative sign, declare if the vehicle is going left or right
     if finalRun < 0:
         negativeRunFlag = 1
         print('Going Left')
@@ -49,14 +43,15 @@ def detectCorner(helper):
         print('Going Right')
         negativeRunFlag = 0
 
+    # remove any NAN
     angleList = [x for x in angleList if str(x) != 'nan']
     
+    # calculate average agnle by either the averaging the list, or angle from sum
+    angleSum = np.arctan2(sumRise,sumRun)
     angleAvg = np.mean(angleList)
-    # print('AVERAGE ANGLE: ')
-    # print(angleAvg)
+    print(np.rad2deg(angleSum))
 
-    inc += 1
-        
+    inc += 1        
 
     return np.rad2deg(angleAvg)
 

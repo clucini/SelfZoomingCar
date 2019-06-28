@@ -11,9 +11,9 @@ def find_overlaps(y_contours, b_contours):
         lastdiff = 100000
         f = 0
         while abs(y_contours[i][1] - b_contours[f][1]) <= lastdiff:
-            print(b_contours[f])
+            # print(b_contours[f])
             lastdiff = abs(y_contours[i][1] - b_contours[f][1])
-            print(lastdiff)
+            # print(lastdiff)
             f += 1
             if f >= len(b_contours):
                 break
