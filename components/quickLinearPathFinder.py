@@ -46,9 +46,9 @@ def getPathToFollow(helper):
 
     b_lowest = find_lowest(helper['main_b_contour'])
     y_lowest = find_lowest(helper['main_y_contour'])
-
-    cv2.line(helper['draw_image'], tuple(b_lowest), tuple(y_lowest), (255,255,255), thickness=1)
-    cv2.circle(helper['draw_image'], tuple(((b_lowest+y_lowest)/2).astype(int)), 3, (0,0,255), thickness=3)
+    if helper['debug']:
+        cv2.line(helper['draw_image'], tuple(b_lowest), tuple(y_lowest), (255,255,255), thickness=1)
+        cv2.circle(helper['draw_image'], tuple(((b_lowest+y_lowest)/2).astype(int)), 3, (0,0,255), thickness=3)
 
 
     parray = np.array(pairs)
