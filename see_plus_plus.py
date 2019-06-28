@@ -45,6 +45,12 @@ def reciever(helper):
     helper['correction'] = 90
     helper['debug'] = memory['debug']
     image = helper['image']
+    localiser.getOurLocation(helper)
+    width = helper['ourLocation'][0].astype(int)*2
+    height = helper['ourLocation'][1].astype(int)
+    image[int(height/10*7.5):,\
+            int(width/4):int(width/6*5)] = 0
+    
     if helper['debug']:
         helper['draw_image'] = image.copy()
     fps=1/(time.time()-memory['time'])
@@ -56,7 +62,6 @@ def reciever(helper):
     memory['totfps']+=fps
     print("avgfps:{0}".format(memory['totfps']/memory['itercount']))
     memory['time']=time.time()
-    localiser.getOurLocation(helper)
 
     # Get Contours
     getContours.get_c(helper)
@@ -69,6 +74,7 @@ def reciever(helper):
         actOn.move(helper)
         memory['reverse'] -= 1
         return
+    
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         # Be careful
         helper['midpoints'] = None
