@@ -25,7 +25,7 @@ print("huh")
 try:
     with open('env', 'r') as fh:
         whereamI = fh.readline()
-        if whereamI == "live":
+        if "live" in whereamI:
             memory['debug'] = False
         else:
             print(whereamI)
