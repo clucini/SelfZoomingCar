@@ -157,6 +157,8 @@ def amendPath(helper):
     else:
         yellodist=0
     # find the distance between blues and yellows and choose one
+    print("obstcl blue:{0}".format(bluedist))
+    print("obstcl yellow:",yellodist)
     if (bluedist == yellodist ==0):
         return False
     if bluedist<yellodist:

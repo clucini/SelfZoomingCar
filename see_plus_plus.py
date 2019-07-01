@@ -24,8 +24,8 @@ memory['totfps']=0
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = True
-memory['record'] = True
+memory['debug'] = False
+memory['record'] = False
 
 # For arduino thread
 memory['angle'] = 90
