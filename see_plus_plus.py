@@ -1,4 +1,4 @@
-import components.seeforward as camera
+import components.cameraForward as camera
 import components.localiser as localiser
 import components.obstacleDetector as obstacleDetector
 import components.actOnMux as actOn
@@ -35,7 +35,7 @@ def reciever(helper):
     # General setup
     global memory
     helper['speed'] = 1575
-    helper['correction'] = 90
+    helper['angle'] = 90
     helper['debug'] = memory['debug']
     helper['target_point'] = None
     image = helper['image']
