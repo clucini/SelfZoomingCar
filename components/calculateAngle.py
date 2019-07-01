@@ -6,19 +6,10 @@ import cv2
 
 
 
-def getCorrection(helper):
+def c(helper):
     ourLocation = helper['ourLocation']
-    pathToFollow = helper['midpoints']
+    targetPoint = helper['targetPoint']
     image = helper['image']
-
-    # Trim based on path
-    radius=5
-    minDist=10000
-    for i in pathToFollow:
-        dist=np.linalg.norm(i-ourLocation)
-        if dist>radius and dist<minDist:
-            targetPoint=i
-            mindist=dist
     deviationVector=targetPoint-ourLocation
     deviationVector[1]*=-1
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
@@ -29,9 +20,10 @@ def getCorrection(helper):
 
 if __name__=="__main__":
     helper = {}
-    helper['ourLocation'] = [100,0]
-    helper['midpoints'] = [4,2,1,10]
+    helper['ourLocation'] = np.array([100,0])
+    helper['targetPoint'] = np.array([4,2])
     helper['image'] = 0
-    print(getCorrection(np.array((320,100))))
+    helper['debug']=False
+    print(getCorrection(helper))
 
 
