@@ -8,7 +8,7 @@ import components.clean_contours as cc
 import components.videowrite as videowriter
 import components.fpsCounter as fps
 import components.steer as steer
-import calculateAngle as calculateAngle
+import components.calculateAngle as calculateAngle
 import traceback, cv2, time
 import numpy as np
 from threading import Thread
@@ -55,6 +55,8 @@ def reciever(helper):
     cc.clean(helper)
     
     
+    # if obstacleDetector.amendPath(helper):
+        # pass
     if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         helper['speed'] = 1500
     elif helper['main_y_contour'] is None:
