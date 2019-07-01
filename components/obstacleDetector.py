@@ -128,7 +128,7 @@ def amendPath(helper):
     if helper['debug']:
         # Draw contours on image
         drawImg=helper['draw_image']
-        # drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),3)
+        drawImg=cv2.drawContours(drawImg,[approx],-1,(255,255,0),3)
         drawImg=cv2.drawContours(drawImg,[laobj],-1,(255,0,0),-1)
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
@@ -147,7 +147,7 @@ def amendPath(helper):
     else:
         bluedist=0
     if not yellow_contours is None:
-        yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
+        yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
         yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])
         yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
     else:
