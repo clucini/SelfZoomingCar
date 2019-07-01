@@ -122,10 +122,6 @@ def amendPath(helper):
             print("Obstacle behind yellow")
             return False
 
-    if np.amax(laobj[:, 1]) < helper['ourLocation'][1]/4:
-        return False
-
-
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
@@ -152,18 +148,20 @@ def amendPath(helper):
         bluedist=0
     if not yellow_contours is None:
         yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
-        yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
+        yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])
         yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
     else:
-        yellodist=0
+        yellowdist=0
     # find the distance between blues and yellows and choose one
-    if (bluedist == yellodist ==0):
+    if (bluedist == yellowdist ==0):
         return False
-    if bluedist<yellodist:
+    if bluedist<yellowdist:
         result=yelloresult
     else:
         result=blueresult
     helper['target_point'] = [result]
+    print('Bluedist: ', bluedist)
+    print('Yellowdist: ', yellowdist)
     ## now set the angle
 
     if helper['debug']:
