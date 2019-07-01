@@ -3,8 +3,9 @@ def r(helper,memory):
       memory['reverse']+=1
       return False
    elif memory['reverse']>0:
-      memory['angle']=memory['last_angles'][0]
-      memory['speed']=1490
+      memory['angle']=90
+      memory['speed']=1350
+      memory['reverse']-=1
       return True
    else:
       return False
@@ -12,6 +13,7 @@ def r(helper,memory):
 
 def beware(helper,memory):
    memory['reverse']-=2
-   if memory['reverse']<-20:
-        memory['reverse']=20
-   r(helper,memory)
+   if memory['reverse']<-7:
+        memory['reverse']=10
+   memory['angle']=90
+   memory['speed']=1350

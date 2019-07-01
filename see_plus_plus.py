@@ -25,17 +25,17 @@ memory['itercount']=0
 
 # Debug stuff
 memory['debug'] = True
-memory['record'] = False
+memory['record'] = True
 
 # For arduino thread
 memory['angle'] = 90
-memory['speed'] = 1575
+memory['speed'] = 1500
 memory['running'] = True
 
 def reciever(helper):
     # General setup
     global memory
-    helper['speed'] = 1575
+    helper['speed'] = 1590
     helper['angle'] = 90
     helper['debug'] = memory['debug']
     helper['target_point'] = None
@@ -56,26 +56,28 @@ def reciever(helper):
     cc.clean(helper)
     
     # Reverse if necessary
-    if not reverse.r(helper,memory):
-    if obstacleDetector.amendPath(helper):
+    if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
+        reverse.beware(helper,memory)
+        print('bewareing')
+    elif not reverse.r(helper,memory):
+        print ('not reversing...')
+        if obstacleDetector.amendPath(helper):
             pass
-        if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
-            r.beware(helper,memory)
-        elif helper['main_y_contour'] is None:
-            followLine.follow(helper,'blue')    
-        elif helper['main_b_contour'] is None:
-            followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
+#        elif helper['main_y_contour'] is None:
+ #           followLine.follow(helper,'blue')    
+  #      elif helper['main_b_contour'] is None:
+   #         followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
         else:
             steer.s(helper)
         
         if helper['target_point'] is not None:
             calculateAngle.c(helper)
-        if len(memory['last_angles'] > 10):
+        if len(memory['last_angles']) > 1:
              memory['last_angles'].pop()
         memory['last_angles'].insert(0, helper['angle'])
-    # Sending stuff to arduino thread
-    memory['angle'] = sum(memory['last_angles']) / len(memory['last_angles'])
-    memory['speed'] = helper['speed']
+        # Sending stuff to arduino thread
+        memory['angle'] = sum(memory['last_angles']) / len(memory['last_angles'])
+        memory['speed'] = helper['speed']
     
     # Drawing and recording
     if memory['debug']:
