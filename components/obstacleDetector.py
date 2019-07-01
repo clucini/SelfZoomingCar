@@ -163,8 +163,12 @@ def amendPath(helper):
         result=yelloresult
     else:
         result=blueresult
-    helper['midpoints'] = [result]
+    helper['target_point'] = [result]
     ## now set the angle
+
+    if helper['debug']:
+        cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
+    return True
 
     deviationVector=result-helper['ourLocation']
     deviationVector[1]*=-1
@@ -172,8 +176,4 @@ def amendPath(helper):
     angle = 90 - ((90 - angle) * 2)
     # if not helper['image'] is None and helper['debug']:
         # helper['draw_image']=cv2.line(helper['draw_image'],tuple(helper['ourLocation'].astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
-    helper['correction']=np.clip(angle,45,135)
-
-    if helper['debug']:
-        cv2.circle(drawImg,tuple(result),20,(0,255,255),-1)
-    return True
+    helper['angle']=np.clip(angle,45,135)
