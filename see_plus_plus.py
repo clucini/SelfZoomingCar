@@ -7,6 +7,7 @@ import components.getContours as getContours
 import components.clean_contours as cc
 import components.videowrite as videowriter
 import components.fpsCounter as fps
+import components.reverse as reverse
 import components.steer as steer
 import components.calculateAngle as calculateAngle
 import traceback, cv2, time
@@ -54,26 +55,22 @@ def reciever(helper):
     getContours.get_c(helper)
     cc.clean(helper)
     
-    
-    # if obstacleDetector.amendPath(helper):
-        # pass
-    if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
-        helper['speed'] = 1500
-    elif helper['main_y_contour'] is None:
-        followLine.follow(helper,'blue')    
-    elif helper['main_b_contour'] is None:
-        followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
-    else:
-        steer.s(helper)
-    
-    if helper['target_point'] is not None:
-        calculateAngle.c(helper)
+    # Reverse if necessary
+    if not reverse.r(helper,memory):
+        if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
+            helper['speed'] = 1500
+        elif helper['main_y_contour'] is None:
+            followLine.follow(helper,'blue')    
+        elif helper['main_b_contour'] is None:
+            followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
+        else:
+            steer.s(helper)
         
-    
-    # Sending stuff to arduino thread
-    memory['angle'] = helper['angle']
-    memory['speed'] = helper['speed']
-    
+        if helper['target_point'] is not None:
+            calculateAngle.c(helper)
+        # Sending stuff to arduino thread
+        memory['angle'] = helper['angle']
+        memory['speed'] = helper['speed']
     # Drawing and recording
     if memory['debug']:
         cv2.imshow("uneditted", image)

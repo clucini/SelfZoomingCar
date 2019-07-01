@@ -16,7 +16,8 @@ def c(helper):
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
     if not image is None and helper['debug']:
-        helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
+        pass
+        #helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
     helper['angle']=np.clip(angle,45,135)
 
 if __name__=="__main__":
@@ -26,5 +27,4 @@ if __name__=="__main__":
     helper['image'] = 0
     helper['debug']=False
     print(c(helper))
-
 
