@@ -5,11 +5,12 @@ import numpy as np
 def get_c(helper):
     image = helper['image']
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    hsv_blue = hsv[0:helper['ourLocation'][1].astype(
-        int), 0:helper['ourLocation'][0].astype(int)]
+    hsv_blue = hsv.copy()
+   # hsv_blue = hsv[0:helper['ourLocation'][1].astype(
+    #    int), 0:helper['ourLocation'][0].astype(int)]
     hsv_yellow = hsv.copy()
-    hsv_yellow[0:helper['ourLocation'][1].astype(
-        int), :helper['ourLocation'][0].astype(int)] = 0
+ #   hsv_yellow[0:helper['ourLocation'][1].astype(
+  #      int), :helper['ourLocation'][0].astype(int)] = 0
 
     # Converts the remaining image from RGB to HSV
     helper['hsv'] = hsv  # i need this for later
