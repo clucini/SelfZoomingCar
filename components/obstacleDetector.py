@@ -122,17 +122,13 @@ def amendPath(helper):
             print("Obstacle behind yellow")
             return False
 
-    if np.amax(laobj[:, 1]) < helper['ourLocation'][1]/4:
-        return False
-
-
     # Approximate contour to square
     epsilon = 0.1*cv2.arcLength(laobj,True)
     approx = cv2.approxPolyDP(laobj,epsilon,True)
     if helper['debug']:
         # Draw contours on image
         drawImg=helper['draw_image']
-        # drawImg=cv2.drawContours(drawImg,[approx],-1,(255,0,0),3)
+        drawImg=cv2.drawContours(drawImg,[approx],-1,(255,255,0),3)
         drawImg=cv2.drawContours(drawImg,[laobj],-1,(255,0,0),-1)
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
@@ -144,26 +140,28 @@ def amendPath(helper):
     # Find blue and yellow corresponding points.
     blue_contours=helper['main_b_contour']
     yellow_contours=helper['main_y_contour']
-    if not blue_contours is None:
+    if blue_contours is None:
+        bluepair=[minpts[0],np.array((0,minpts[0][1]))]
+    else:
         bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
-        bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
-        blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
-    else:
-        bluedist=0
+    bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
+    blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
     if not yellow_contours is None:
-        yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
-        yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
-        yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
+        yellopair=[minpts[1],np.array((0,minpts[1][1]))]
     else:
-        yellodist=0
+        yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
+    yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])
+    yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
     # find the distance between blues and yellows and choose one
-    if (bluedist == yellodist ==0):
+    if (bluedist == yellowdist ==0):
         return False
-    if bluedist<yellodist:
+    if bluedist<yellowdist:
         result=yelloresult
     else:
         result=blueresult
     helper['target_point'] = [result]
+    print('Bluedist: ', bluedist)
+    print('Yellowdist: ', yellowdist)
     ## now set the angle
 
     if helper['debug']:
