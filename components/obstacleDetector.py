@@ -140,18 +140,18 @@ def amendPath(helper):
     # Find blue and yellow corresponding points.
     blue_contours=helper['main_b_contour']
     yellow_contours=helper['main_y_contour']
-    if not blue_contours is None:
+    if blue_contours is None:
+        bluepair=np.array((0,minpts[0][1]))
+    else:
         bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
-        bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
-        blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
-    else:
-        bluedist=0
+    bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
+    blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
     if not yellow_contours is None:
-        yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
-        yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])
-        yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
+        bluepair=np.array((hsv.shape[1],minpts[1][1]))
     else:
-        yellowdist=0
+        yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
+    yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])
+    yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
     # find the distance between blues and yellows and choose one
     if (bluedist == yellowdist ==0):
         return False
