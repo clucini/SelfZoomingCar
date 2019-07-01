@@ -37,7 +37,7 @@ def reciever(helper):
     helper['speed'] = 1575
     helper['correction'] = 90
     helper['debug'] = memory['debug']
-    helper['target_point']
+    helper['target_point'] = None
     image = helper['image']
     helper['draw_image'] = image.copy()
     localiser.getOurLocation(helper)
