@@ -10,7 +10,8 @@ def c(helper):
     ourLocation = helper['ourLocation']
     targetPoint = helper['target_point']
     image = helper['image']
-    deviationVector=targetPoint-ourLocation
+    deviationVector=(targetPoint-ourLocation)[0]
+    print (deviationVector)
     deviationVector[1]*=-1
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
