@@ -17,4 +17,4 @@ def follow(helper,blueOrYellow):
     if (meanangle<0):
         meanangle=np.pi/2-meanangle
     # generate a fake point which writes the angle
-    helper['midpoints']=[helper['ourLocation']+np.array((100*np.cos(meanangle),-100*np.sin(meanangle)))]
+    helper['target_point']=[helper['ourLocation']+np.array((100*np.cos(meanangle),-100*np.sin(meanangle)))]

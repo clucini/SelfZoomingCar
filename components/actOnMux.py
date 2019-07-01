@@ -54,9 +54,9 @@ def move(memory):
                 print('Angle Read Incorrectly:', a.strip())
                 print('Angle Read Expected:', memory['angle'])
                 print('')
-            ser.write(str(1565).encode())
+            ser.write(str(int(memory['speed'])).encode())
             a = ser.readline().decode()
-            if a.strip() != str(1565):
+            if a.strip() != str(int(memory['speed'])):
                 print('Speed Read Incorrectly:', a.strip())
                 print('Speed Read Expect:', '1560')
                 print('')

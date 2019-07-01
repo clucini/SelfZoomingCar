@@ -8,7 +8,7 @@ import cv2
 
 def c(helper):
     ourLocation = helper['ourLocation']
-    targetPoint = helper['targetPoint']
+    targetPoint = helper['target_point']
     image = helper['image']
     deviationVector=targetPoint-ourLocation
     deviationVector[1]*=-1
@@ -21,7 +21,7 @@ def c(helper):
 if __name__=="__main__":
     helper = {}
     helper['ourLocation'] = np.array([100,0])
-    helper['targetPoint'] = np.array([4,2])
+    helper['target_point'] = np.array([4,2])
     helper['image'] = 0
     helper['debug']=False
     print(c(helper))
