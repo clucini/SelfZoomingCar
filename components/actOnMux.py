@@ -46,18 +46,19 @@ time.sleep(1)
 
 def move(memory):
     
-    while True:
+    while memory['running']:
         if not noPort:
             ser.write(str(int(memory['angle'])).encode())
             a = ser.readline().decode()
             if a.strip() != str(int(memory['angle'])):
                 print('Angle Read Incorrectly:', a.strip())
                 print('Angle Read Expected:', memory['angle'])
+                print('')
             ser.write(str(1565).encode())
             a = ser.readline().decode()
             if a.strip() != str(1565):
                 print('Speed Read Incorrectly:', a.strip())
                 print('Speed Read Expect:', '1560')
-            print('')
+                print('')
         else:
             time.sleep(1)

@@ -45,7 +45,6 @@ memory['speed'] = 1500
 memory['running'] = True
 
 actOnProcess = Thread(target = actOn.move, args=(memory,))
-actOnProcess.start()
 
 def reciever(helper):
     global memory
@@ -139,14 +138,19 @@ def reciever(helper):
 camera.sendImageTo(reciever)
 
 
-
 # TODO:
 # Stop when no lines detected
 
 if __name__ == '__main__':
+    actOnProcess.start()
 
     try:
         camera.start()
     except Exception as e:
         print(e)
         traceback.print_exc()
+
+    finally:
+        print('asakjshdakjshdkjahdskjahdshasdfahjafs')
+        memory['running']=False
+        actOnProcess.join()
