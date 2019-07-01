@@ -66,7 +66,7 @@ def reciever(helper):
     else:
         steer.s(helper)
     
-    if helper['target_point']:
+    if helper['target_point'] is not None:
         calculateAngle.c(helper)
         
     
