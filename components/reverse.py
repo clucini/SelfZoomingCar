@@ -14,3 +14,4 @@ def beware(helper,memory):
    memory['reverse']-=2
    if memory['reverse']<-20:
         memory['reverse']=20
+   r(helper,memory)

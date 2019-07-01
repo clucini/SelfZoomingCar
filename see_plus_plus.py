@@ -16,7 +16,6 @@ from threading import Thread
 
 memory = {}
 memory['reverse'] = 0
-
 # FPS stuff
 memory['time']=time.time()
 memory['minfps']=100
@@ -58,7 +57,7 @@ def reciever(helper):
     # Reverse if necessary
     if not reverse.r(helper,memory):
         if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
-            helper['speed'] = 1500
+            r.beware(helper,memory)
         elif helper['main_y_contour'] is None:
             followLine.follow(helper,'blue')    
         elif helper['main_b_contour'] is None:
