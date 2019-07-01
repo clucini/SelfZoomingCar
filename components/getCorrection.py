@@ -37,7 +37,7 @@ def getCorrection(helper):
         angle = 45
     helper['correction']=np.clip(angle,45,135)
     
-    print('ANGLE:::::::::::', angle)
+    # print('ANGLE:::::::::::', angle)
     center = helper['ourLocation']
     length = 100
     x =  int((center[0]) + length * -np.cos(angle * 3.1415 / 180.0))

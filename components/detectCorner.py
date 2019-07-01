@@ -38,9 +38,9 @@ def detectCorner(helper):
     # using positive/negative sign, declare if the vehicle is going left or right
     if finalRun < 0:
         negativeRunFlag = 1
-        print('Going Left')
+        # print('Going Left')
     else:
-        print('Going Right')
+        # print('Going Right')
         negativeRunFlag = 0
 
     # remove any NAN
@@ -49,7 +49,7 @@ def detectCorner(helper):
     # calculate average agnle by either the averaging the list, or angle from sum
     angleSum = np.arctan2(sumRise,sumRun)
     angleAvg = np.mean(angleList)
-    print(np.rad2deg(angleSum))
+    # print(np.rad2deg(angleSum))
 
     inc += 1        
 

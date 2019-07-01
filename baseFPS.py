@@ -55,6 +55,8 @@ def reciever(helper):
     memory['totfps']+=fps
     print("avgfps:{0}".format(memory['totfps']/memory['itercount']))
     memory['time']=time.time()
+    cv2.imshow('image', helper['image'])
+    cv2.waitKey(1)
 
 
 # The main loop starts in topdown.

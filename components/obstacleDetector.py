@@ -166,12 +166,12 @@ def amendPath(helper):
     helper['midpoints'] = [result]
     ## now set the angle
 
-    deviationVector=result-ourLocation
+    deviationVector=result-helper['ourLocation']
     deviationVector[1]*=-1
     angle = int(np.arctan2(deviationVector[1], deviationVector[0])*180/np.pi)
     angle = 90 - ((90 - angle) * 2)
-    if not image is None and helper['debug']:
-        helper['draw_image']=cv2.line(helper['draw_image'],tuple(ourLocation.astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
+    # if not helper['image'] is None and helper['debug']:
+        # helper['draw_image']=cv2.line(helper['draw_image'],tuple(helper['ourLocation'].astype(int)),tuple(targetPoint.astype(int)),(255,255,255),10)
     helper['correction']=np.clip(angle,45,135)
 
     if helper['debug']:
