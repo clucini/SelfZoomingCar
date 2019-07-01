@@ -15,6 +15,7 @@ from threading import Thread
 
 memory = {}
 memory['reverse'] = 0
+memory['last_angles'] = []
 
 # FPS stuff
 memory['time']=time.time()
@@ -55,9 +56,9 @@ def reciever(helper):
     cc.clean(helper)
     
     
-    # if obstacleDetector.amendPath(helper):
-        # pass
-    if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
+    if obstacleDetector.amendPath(helper):
+        pass
+    elif helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         helper['speed'] = 1500
     elif helper['main_y_contour'] is None:
         followLine.follow(helper,'blue')    
@@ -69,9 +70,15 @@ def reciever(helper):
     if helper['target_point'] is not None:
         calculateAngle.c(helper)
         
-    
+    if len(memory['last_angles'] > 10):
+        memory['last_angles'].pop()
+        
+    memory['last_angles'].insert(0, helper['angle'])
+        
+
+
     # Sending stuff to arduino thread
-    memory['angle'] = helper['angle']
+    memory['angle'] = sum(memory['last_angles']) / len(memory['last_angles'])
     memory['speed'] = helper['speed']
     
     # Drawing and recording
