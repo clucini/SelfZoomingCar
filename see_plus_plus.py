@@ -99,6 +99,8 @@ if __name__ == '__main__':
     actOnProcess = Thread(target = actOn.move, args=(memory,))
     actOnProcess.start()
 
+    input('Press enter when ready: ')
+
     try:
         camera.start()
     except Exception as e:
@@ -106,6 +108,6 @@ if __name__ == '__main__':
         traceback.print_exc()
 
     finally:
-        print('asakjshdakjshdkjahdskjahdshasdfahjafs')
+        print('Program stopped successfully')
         memory['running']=False
         actOnProcess.join()
