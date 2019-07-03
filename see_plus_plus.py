@@ -1,4 +1,4 @@
-import components.cameraForward as camera
+import components.cameraPlayback as camera
 import components.localiser as localiser
 import components.obstacleDetector as obstacleDetector
 import components.actOnMux as actOn
@@ -18,7 +18,7 @@ from threading import Thread
 memory = {}
 memory['reverse'] = 0
 memory['seen_green'] = False
-memory['green_timer'] = False
+memory['green_timer'] = 0
 
 
 # FPS stuff
@@ -28,7 +28,7 @@ memory['totfps']=0
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = False
+memory['debug'] = True
 memory['record'] = False
 
 # For arduino thread
@@ -84,6 +84,8 @@ def reciever(helper):
         memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
         #memory['speed'] = helper['speed']
     
+    green.check(helper, memory)
+
     # Drawing and recording
     if memory['debug']:
         cv2.imshow("uneditted", image)
@@ -102,7 +104,7 @@ def run():
 
     try:
         camera.start(memory)
-    
+
     except Exception as e:
         print(e)
         traceback.print_exc()
