@@ -18,7 +18,7 @@ from threading import Thread
 memory = {}
 memory['reverse'] = 0
 memory['seen_green'] = False
-memory['green_timer'] = False
+memory['green_timer'] = 0
 
 
 # FPS stuff
@@ -28,7 +28,7 @@ memory['totfps']=0
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = False
+memory['debug'] = True
 memory['record'] = False
 
 # For arduino thread
@@ -86,6 +86,8 @@ def reciever(helper):
         memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
         #memory['speed'] = helper['speed']
     
+    green.check(helper, memory)
+
     # Drawing and recording
     if memory['debug']:
         cv2.imshow("uneditted", image)
@@ -111,7 +113,9 @@ def run():
     stop_thread(actOnProcess)
     memory['speed']=1500
     memory['angle']=90
+    memory['running']=True
     actOn.move(memory)
+    memory['running']=False
 def stop_thread(actOnProcess):
     global memory
     memory['running']=False
@@ -123,5 +127,9 @@ if __name__ == '__main__':
         while not memory['true_stop']:
            input('Press enter when ready: ')
            run()
+           memory['speed']=1500
+           memory['angle']=90
+           memory['running']=True
+           actOn.move(memory)
     finally:
         stop_thread(actOnProcess)
