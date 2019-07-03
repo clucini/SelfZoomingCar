@@ -104,7 +104,7 @@ def run():
     actOnProcess.start()
 
     try:
-        camera.start()
+        camera.start(memory)
     
     except Exception as e:
         print(e)
