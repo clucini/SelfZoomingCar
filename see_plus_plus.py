@@ -67,10 +67,12 @@ def reciever(helper):
     cc.clean(helper)
     
     # Reverse if necessary
-    if helper['main_y_contour'] is None and helper['main_b_contour'] is None:
+    if reverse.r(helper,memory):
+        print("reversing...")
+    elif helper['main_y_contour'] is None and helper['main_b_contour'] is None:
         reverse.beware(helper,memory)
         print('bewareing')
-    elif not reverse.r(helper,memory):
+    else:
         print ('not reversing...')
         if obstacleDetector.amendPath(helper):
             pass
@@ -104,14 +106,16 @@ def run():
 
     try:
         camera.start(memory)
-
     except Exception as e:
         print(e)
         traceback.print_exc()
-    finally:
-        print('Program stopped succesfully')
-        stop_thread(actOnProcess)
-
+    print('Program stopped')
+    stop_thread(actOnProcess)
+    memory['speed']=1500
+    memory['angle']=90
+    memory['running']=True
+    actOn.move(memory)
+    memory['running']=False
 def stop_thread(actOnProcess):
     global memory
     memory['running']=False
@@ -119,6 +123,13 @@ def stop_thread(actOnProcess):
 
 
 if __name__ == '__main__':
-    while not memory['true_stop']:
-        input('Press enter when ready: ')
-        run()
+    try:
+        while not memory['true_stop']:
+           input('Press enter when ready: ')
+           run()
+           memory['speed']=1500
+           memory['angle']=90
+           memory['running']=True
+           actOn.move(memory)
+    finally:
+        stop_thread(actOnProcess)

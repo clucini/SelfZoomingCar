@@ -13,6 +13,7 @@ def r(helper,memory):
 
 def beware(helper,memory):
    memory['reverse']-=2
+   print (memory['reverse'])
    if memory['reverse']<-7:
-        memory['reverse']=10
+        memory['reverse']=20
    memory['speed']=1560
