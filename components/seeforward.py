@@ -37,7 +37,7 @@ def sendImageTo(func):
     func_to_send_to = func
 
 def start():
-    while True:
+    while memory['running']:
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
         color_frame = frames.get_color_frame()
