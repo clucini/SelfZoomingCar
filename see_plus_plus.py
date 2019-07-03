@@ -79,9 +79,6 @@ def reciever(helper):
         
         if helper['target_point'] is not None:
             calculateAngle.c(helper)
-        if len(memory['last_angles']) > 1:
-             memory['last_angles'].pop()
-        memory['last_angles'].insert(0, helper['angle'])
         # Sending stuff to arduino thread
         memory['angle'] = sum(memory['last_angles']) / len(memory['last_angles'])
         memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base

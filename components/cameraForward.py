@@ -7,7 +7,7 @@ func_to_send_to = None
 def sendImageTo(func):
     global func_to_send_to
     func_to_send_to = func
-def start():
+def start(memory):
     cap = cv2.VideoCapture(0)
 
     while(True):
