@@ -18,6 +18,8 @@ from threading import Thread
 memory = {}
 memory['reverse'] = 0
 memory['seen_green'] = False
+memory['green_timer'] = False
+
 
 # FPS stuff
 memory['time']=time.time()
@@ -33,6 +35,10 @@ memory['record'] = False
 memory['angle'] = 90
 memory['speed'] = 1500
 memory['running'] = True
+
+# This is used to actually stop execution of the script. Shouldn't need to be used tbh.
+memory['true_stop'] = False
+
 
 base=1570
 boost=60
@@ -90,23 +96,34 @@ def reciever(helper):
     if memory['record']:
         videowriter.writeToFile(helper)
 
-
-
-if __name__ == '__main__':
+def run()
+    global memory
     camera.sendImageTo(reciever)
+
     actOnProcess = Thread(target = actOn.move, args=(memory,))
     actOnProcess.start()
 
-    input('Press enter when ready: ')
-
     try:
-        camera.start()
+        camera.start(memory)
     
     except Exception as e:
         print(e)
         traceback.print_exc()
+    stop_thread()
 
-    finally:
-        print('Program stopped successfully')
-        memory['running']=False
-        actOnProcess.join()
+def stop_thread()
+    global memory
+    memory['running']=False
+    actOnProcess.join()
+
+
+if __name__ == '__main__':
+    while not memory['true_stop']:
+        input('Press enter when ready: ')
+        run()
+
+
+
+finally:
+    print('Program stopped due to outside circumstances')
+    stop_thread()
