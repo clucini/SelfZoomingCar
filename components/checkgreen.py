@@ -4,7 +4,7 @@ import time
 def check(helper, memory):
     isThereGreen = False
     
-    green_lower = (55, 20, 20)
+    green_lower = (55, 40, 40)
     green_upper = (80,255,255)
 
     green_hsv = helper['hsv'][int(helper['ourLocation'][1].astype(int)/10*5):,]
@@ -25,10 +25,12 @@ def check(helper, memory):
         cv2.drawContours(helper['draw_image'], cur, -1, (255, 255, 0), 3)
         if not memory['seen_green']:
             memory['seen_green'] = True
-            memory['green_time'] = time.time()
     else:
-        if memory['seen_green'] and time.time() - memory['green_time'] > 2:
-            memory['running'] = True
+        if memory['seen_green'] and memory['green_timer'] == 0:
+            memory['green_timer'] = time.time()
+        
+        elif memory['seen_green'] and time.time() - memory['green_timer'] > 1:
+            memory['running'] = False
 
 
 
