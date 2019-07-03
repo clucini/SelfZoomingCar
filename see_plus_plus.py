@@ -1,4 +1,4 @@
-import components.seeforward as camera
+import components.cameraForward as camera
 import components.localiser as localiser
 import components.obstacleDetector as obstacleDetector
 import components.actOnMux as actOn
