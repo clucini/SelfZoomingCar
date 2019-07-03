@@ -70,8 +70,16 @@ def amendPath(helper):
     hsv=helper['hsv']
     # threshold out obstacles
     obj_lower = (150, 60, 60)
-    obj_upper = (170,255,255)
+    obj_upper = (180,255,255)
+   
+    obj2_lower = (0, 60, 60)
+    obj2_upper = (10,255,255)
+    
     obj_mask = cv2.inRange(hsv, obj_lower, obj_upper)
+    obj2_mask = cv2.inRange(hsv, obj2_lower, obj2_upper)
+    
+    # obj_mask = cv2.addWeighted(obj_mask, 1, obj2_mask, 1, 1)
+    obj_mask = cv2.bitwise_or(obj_mask, obj2_mask)
     #cv2.imshow("purpleboi",obj_mask)
     # Get contours
     cnts=cv2.findContours(obj_mask,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)[0]

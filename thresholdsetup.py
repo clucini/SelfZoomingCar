@@ -1,18 +1,18 @@
 import components.seeforward as camera
 import cv2
 
+b_lower = (150, 60, 60)
+b_upper = (190,255,255)
 
-b_lower = (100, 100, 100)
-b_upper = (115,255,255)
 
 y_lower = (15, 150, 50)
 y_upper = (30,255,255)
 
-def reciever(image):
+def reciever(helper):
+    image = helper['image']
     global y_lower, y_upper, b_lower, b_upper
     cv2.imshow("Color", image)
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    
+
     y_mask = cv2.inRange(hsv, y_lower, y_upper)
     b_mask = cv2.inRange(hsv, b_lower, b_upper)
 
