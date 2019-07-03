@@ -51,7 +51,7 @@ def reciever(helper):
     height = helper['ourLocation'][1].astype(int)
     width = helper['ourLocation'][0].astype(int)*2
 
-    image[int(height/10*7.5):, int(width/4):int(width/6*5)] = 0
+    image[int(height/10*7.5):, int(width/4):int(width/7*6)] = 0
     
 
     # Get Contours
