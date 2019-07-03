@@ -1,4 +1,4 @@
-import components.seeforward as camera
+import components.cameraForward as camera
 import components.localiser as localiser
 import components.obstacleDetector as obstacleDetector
 import components.actOnMux as actOn
@@ -96,7 +96,7 @@ def reciever(helper):
     if memory['record']:
         videowriter.writeToFile(helper)
 
-def run()
+def run():
     global memory
     camera.sendImageTo(reciever)
 
@@ -104,14 +104,16 @@ def run()
     actOnProcess.start()
 
     try:
-        camera.start(memory)
+        camera.start()
     
     except Exception as e:
         print(e)
         traceback.print_exc()
-    stop_thread()
+    finally:
+        print('Program stopped succesfully')
+        stop_thread(actOnProcess)
 
-def stop_thread()
+def stop_thread(actOnProcess):
     global memory
     memory['running']=False
     actOnProcess.join()
@@ -121,9 +123,3 @@ if __name__ == '__main__':
     while not memory['true_stop']:
         input('Press enter when ready: ')
         run()
-
-
-
-finally:
-    print('Program stopped due to outside circumstances')
-    stop_thread()
