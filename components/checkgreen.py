@@ -1,8 +1,17 @@
 import cv2
 import time
 
+# If anybody in future is reading this code:
+# Don't use this script please
+# The amount of risk is insane
+# Everything is assumed
+# Please
+# Don't do this
+
 def check(helper, memory):
-    isThereGreen = False
+
+    if time.time() - memory['start_time'] < 2:
+        return
     
     green_lower = (55, 40, 40)
     green_upper = (80,255,255)

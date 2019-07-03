@@ -9,9 +9,9 @@ def sendImageTo(func):
     func_to_send_to = func
 
 def start(memory):
-    cap = cv2.VideoCapture('vids/original117.avi')
+    cap = cv2.VideoCapture('vids/remote.avi')
 
-    while(True):
+    while memory['running']:
         # Capture frame-by-frame
         ret, frame = cap.read()
 
