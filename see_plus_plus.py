@@ -10,13 +10,15 @@ import components.fpsCounter as fps
 import components.reverse as reverse
 import components.steer as steer
 import components.calculateAngle as calculateAngle
+import components.checkgreen as green
 import traceback, cv2, time, math
 import numpy as np
 from threading import Thread
 
 memory = {}
 memory['reverse'] = 0
-memory['last_angles'] = []
+memory['seen_green'] = False
+
 # FPS stuff
 memory['time']=time.time()
 memory['minfps']=100
@@ -24,7 +26,7 @@ memory['totfps']=0
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = True
+memory['debug'] = False
 memory['record'] = False
 
 # For arduino thread
@@ -66,10 +68,6 @@ def reciever(helper):
         print ('not reversing...')
         if obstacleDetector.amendPath(helper):
             pass
-#        elif helper['main_y_contour'] is None:
- #           followLine.follow(helper,'blue')    
-  #      elif helper['main_b_contour'] is None:
-   #         followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
         else:
             steer.s(helper)
         
@@ -99,13 +97,16 @@ if __name__ == '__main__':
     actOnProcess = Thread(target = actOn.move, args=(memory,))
     actOnProcess.start()
 
+    input('Press enter when ready: ')
+
     try:
         camera.start()
+    
     except Exception as e:
         print(e)
         traceback.print_exc()
 
     finally:
-        print('asakjshdakjshdkjahdskjahdshasdfahjafs')
+        print('Program stopped successfully')
         memory['running']=False
         actOnProcess.join()
