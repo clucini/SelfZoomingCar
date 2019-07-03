@@ -6,110 +6,174 @@ import cv2
 # Corner detect
 
 def detectCorner(helper):
+
+    import cv2
+import numpy as np
+
+
+def get_c(helper):
+    image = helper['image']
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    hsv_blue = hsv.copy()
+   # hsv_blue = hsv[0:helper['ourLocation'][1].astype(
+    #    int), 0:helper['ourLocation'][0].astype(int)]
+    hsv_yellow = hsv.copy()
+ #   hsv_yellow[0:helper['ourLocation'][1].astype(
+  #      int), :helper['ourLocation'][0].astype(int)] = 0
+
+    # Converts the remaining image from RGB to HSV
+    helper['hsv'] = hsv  # i need this for later
+
+    # Upper and lower bounds for the lines of tape (thanks claudio)
+    b_lower = (100, 60, 100)
+    b_upper = (115, 255, 255)
+
+    y_lower = (15, 65, 150)
+    y_upper = (30, 255, 255)
+
+    # Get blue and yellow sections (thanks claudio)
+    y_mask = cv2.inRange(hsv_yellow, y_lower, y_upper)
+    b_mask = cv2.inRange(hsv_blue, b_lower, b_upper)
+    helper['b_mask'] = b_mask
+    helper['y_mask'] = y_mask
+    #cv2.imshow('y_mask', y_mask)
+    # cv2.waitKey(1)
+    #cv2.imshow('b_mask', b_mask)
+
+    # Finds contours in our individual images. This is what we actually use to determine our 2 points of interest.
+    # hierarchy isn't in use, but if its not there, the function doesn't work.
+    b_contours, hierarchy = cv2.findContours(
+        b_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    y_contours, hierarchy = cv2.findContours(
+        y_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+
+    main_b_contour = None
+    b_y = -1
+
+    if(b_contours):
+        lowest_point = 0
+        p = None
+        q = -1
+        for i in range(len(b_contours)):
+            if len(b_contours[i]) < 50:
+                continue
+            # use np for this instead of python loops
+            this_lowest_index=np.argmax(b_contours[i][:,0,1])
+            this_lowest_pt=b_contours[i][this_lowest_index,0,1]
+            if this_lowest_pt > lowest_point:
+                lowest_point = this_lowest_pt
+                p = i
+                q = this_lowest_index
+
+
+        ##
+        highest_point = 10000
+        s = None
+        r = -1
+        for i in range(len(b_contours)):
+            if len(b_contours[i]) < 50:
+                continue
+            # use np for this instead of python loops
+            this_highest_index=np.argmax(b_contours[i][:,0,1])
+            this_highest_pt=b_contours[i][this_highest_index,0,1]
+            if this_highest_pt < highest_point:
+                higest_point = this_highest_pt
+                s = i
+                r = this_highest_index
+        
+        print(s,r)
+
+        if p is not None:
+            main_b_contour = b_contours[p]
+            if helper['debug']:
+                cv2.circle(helper['draw_image'], (b_contours[p][q]
+                [0][0], b_contours[p][q][0][1]), 4, (255, 0, 255))
+
+                cv2.circle(helper['draw_image'], (b_contours[p][r]
+                [0][0], b_contours[s][r][0][1]), 4, (255, 0, 255))
+            b_y = b_contours[s][q][0][1]
+            b_y_h = b_contours[s][r][0][1]
     
-    # get values from helper 
-    currMidpoint = helper['midpoints']
-    fiveMid = helper['midpoints'][5:10]
-    # image = helper['image']
+    main_y_contour = None
+    y_y = -1
 
-    angleList = []
-    riseList = []
-    runList = []
-    angleAvg = 0
-    inc = 0
+    if(y_contours):
+        lowest_point = 0
+        p = -1
+        q = -1
+        for i in range(len(y_contours)):
+            if len(y_contours[i]) < 50:
+                continue
+            # use np for this instead of python loops
+            this_lowest_index=np.argmax(y_contours[i][:,0,1])
+            this_lowest_pt=y_contours[i][this_lowest_index,0,1]
+            if this_lowest_pt > lowest_point:
+                lowest_point = this_lowest_pt
+                p = i
+                q = this_lowest_index
 
-    for i in currMidpoint[:-1]:
-         
-        # gets the distance from the edge to the centre through line algorithm
-        rise = currMidpoint[inc+1][1] - i[1]
-        run = currMidpoint[inc+1][0] - i[0]
+        highest_point = 0
+        r = -1
+        s = -1
+        for i in range(len(y_contours)):
+            if len(y_contours[i]) < 50:
+                continue
+            # use np for this instead of python loops
+            this_highest_index=np.argmax(y_contours[i][:,0,1])
+            this_highest_pt=y_contours[i][this_highest_index,0,1]
+            if this_highest_pt > highest_point:
+                highest_point = this_highest_pt
+                r = i
+                s = this_highest_index
+               
+        print(r,s)
 
-        # finds the angle of each pair of rise and run and stores into angleList
-        runList.append(run)
-        riseList.append(rise)
-        angle = np.arctan2(rise,run)
-        angleList.append(angle)
 
-    sumRun = np.sum(runList)
-    sumRise = np.sum(riseList)
-    finalRun = np.mean(runList)
-    finalRise = np.mean(riseList)
+        if p is not None:
+            main_y_contour = y_contours[p]
+            #cv2.circle(helper['draw_image'], (y_contours[p][q][0][0], y_contours[p][q][0][1]), 4, (255, 0, 255))
+            y_y = y_contours[p][q][0][1]
+            main_y_contour = y_contours[r]
+            #cv2.circle(helper['draw_image'], (y_contours[r][s][0][0], y_contours[r][s][0][1]), 4, (255, 0, 255))
+            y_y_h = y_contours[r][s][0][1]
 
-    # using positive/negative sign, declare if the vehicle is going left or right
-    if finalRun < 0:
-        negativeRunFlag = 1
-        # print('Going Left')
-    else:
-        # print('Going Right')
-        negativeRunFlag = 0
+    helper['y_y'] = y_y
+    helper['b_y'] = b_y
 
-    # remove any NAN
-    angleList = [x for x in angleList if str(x) != 'nan']
+    if helper['debug']:
+        cv2.drawContours(helper['draw_image'],
+                         main_y_contour, -1, (0, 255, 0), 3)
+        cv2.drawContours(helper['draw_image'],
+                         main_b_contour, -1, (0, 255, 0), 3)
+
+    # 50 pixels in 640/480 resolution; more in higher resolution
+    minSize = helper['image'].shape[0]*helper['image'].shape[1]*50/648/480
+    if main_y_contour is not None:
+        if (cv2.contourArea(main_y_contour) < minSize):
+            main_y_contour = None
+        else:
+            main_y_contour = np.reshape(
+                main_y_contour, (main_y_contour.shape[0], main_y_contour.shape[2]))
+    if main_b_contour is not None:
+        if (cv2.contourArea(main_b_contour) < minSize):
+            main_b_contour = None
+        else:
+            main_b_contour = np.reshape(
+                main_b_contour, (main_b_contour.shape[0], main_b_contour.shape[2]))
+
+    helper['main_y_contour'] = main_y_contour
+    helper['main_b_contour'] = main_b_contour
+
+    # contour gives an array with all the points in the image
+    # print('The main yellow: ')
+    # print(main_y_contour)
+    # print('The main blue: ')
+    # print(main_b_contour)
+
     
-    # calculate average agnle by either the averaging the list, or angle from sum
-    angleSum = np.arctan2(sumRise,sumRun)
-    angleAvg = np.mean(angleList)
-    # print(np.rad2deg(angleSum))
-
-    inc += 1        
-
-    return np.rad2deg(angleAvg)
-
-# INCOMPLETE
-
-
-
-# interpret what the angle gives us
-# def cornerAction(helper):
-#     angleList
 
 
 
 
 
 
-
-
-
-# def inCorner(helper):
-    
-#     # converts the remaining image from rgb to hsv
-#     hsv = helper['hsv']
-
-#     # threshold out obstables
-#     obj_lower = (150, 60, 60)
-#     obj_upper = (170,255,255)
-#     obj_mask = cv2.inRange(hsv, obj_lower, obj_upper)
-
-#     # get contours
-#     # MORE LIKE FIND CORNER
-
-#     # if no corners, break
-
-#     # draw corners on image
-
-#     # find the lowest set of points in the approximation
-
-#     # find the blue and yellow corresponding poitns
-#     blue_contours=helper['main_b_contour']
-#     yellow_contours=helper['main_y_contour']
-#     if not blue_contours is None:
-#         bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
-#         bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
-#         blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
-#     else:
-#         bluedist=0
-#     if not yellow_contours is None:
-#         yellopair=find_overlaps(np.array([minpts[0]]),yellow_contours)[0]
-#         yellodist=np.linalg.norm(yellopair[0]-yellopair[1])
-#         yelloresult=((yellopair[0]+yellopair[1])/2).astype(int)
-#     else:
-#         yellodist=0
-
-#     # find the distance between blues and yellows and choose one    
-#     if bluedist<yellodist:
-#         result=yelloresult
-#     else:
-#         result=blueresult
-
-#     helper['midpoints'] = [result]

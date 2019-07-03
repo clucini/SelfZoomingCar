@@ -10,13 +10,15 @@ import components.fpsCounter as fps
 import components.reverse as reverse
 import components.steer as steer
 import components.calculateAngle as calculateAngle
+import components.checkgreen as green
 import traceback, cv2, time, math
 import numpy as np
 from threading import Thread
 
 memory = {}
 memory['reverse'] = 0
-memory['last_angles'] = []
+memory['seen_green'] = False
+
 # FPS stuff
 memory['time']=time.time()
 memory['minfps']=100
@@ -66,10 +68,6 @@ def reciever(helper):
         print ('not reversing...')
         if obstacleDetector.amendPath(helper):
             pass
-#        elif helper['main_y_contour'] is None:
- #           followLine.follow(helper,'blue')    
-  #      elif helper['main_b_contour'] is None:
-   #         followLine.follow(helper,'notbluethiscanbeanythingwhyusebooleanssteeven')
         else:
             steer.s(helper)
         
@@ -103,6 +101,7 @@ if __name__ == '__main__':
 
     try:
         camera.start()
+    
     except Exception as e:
         print(e)
         traceback.print_exc()
