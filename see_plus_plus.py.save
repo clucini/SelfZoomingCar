@@ -1,42 +1,27 @@
-import components.seeforward as camera
-import components.localiser as localiser
-import components.obstacleDetector as obstacleDetector
-import components.actOnMux as actOn
-import components.followGradient as followLine
-import components.getContours as getContours
-import components.clean_contours as cc
-import components.videowrite as videowriter
-import components.fpsCounter as fps
-import components.reverse as reverse
-import components.steer as steer
-import components.calculateAngle as calculateAngle
-import traceback, cv2, time, math
-import numpy as np
-from threading import Thread
+]\'import components.seeforward as camera import components.localiser as 
+localiser import components.obstacleDetector as obstacleDetector import 
+components.actOnMux as actOn import components.followGradient as followLine 
+import components.getContours as getContours import components.clean_contours 
+as cc import components.videowrite as videowriter import components.fpsCounter 
+as fps import components.reverse as reverse import components.steer as steer 
+import components.calculateAngle as calculateAngle import traceback, cv2, time, 
+math import numpy as np from threading import Thread
 
-memory = {}
-memory['reverse'] = 0
-memory['last_angles'] = []
+memory = {} memory['reverse'] = 0 memory['last_angles'] = []
 # FPS stuff
-memory['time']=time.time()
-memory['minfps']=100
-memory['totfps']=0
+memory['time']=time.time() memory['minfps']=100 memory['totfps']=0 
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = False
-memory['record'] = False
+memory['debug'] = False memory['record'] = False
 
 # For arduino thread
-memory['angle'] = 90
-memory['speed'] = 1500
-memory['running'] = True
+memory['angle'] = 90 memory['speed'] = 1500 memory['running'] = True
 
-base=1570
-boost=60
+base=1540 boost=0
 
 def reciever(helper):
-    # General setup
+]    # General setup
     global memory
     helper['speed'] = 1560
     helper['angle'] = 90
@@ -80,8 +65,8 @@ def reciever(helper):
         memory['last_angles'].insert(0, helper['angle'])
         # Sending stuff to arduino thread
         memory['angle'] = sum(memory['last_angles']) / len(memory['last_angles'])
-        memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
-        #memory['speed'] = helper['speed']
+       # memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
+        memory['speed'] = helper['speed']
     
     # Drawing and recording
     if memory['debug']:

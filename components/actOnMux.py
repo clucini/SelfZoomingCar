@@ -58,7 +58,7 @@ def move(memory):
             a = ser.readline().decode()
             if a.strip() != str(int(memory['speed'])):
                 print('Speed Read Incorrectly:', a.strip())
-                print('Speed Read Expect:', '1560')
+                print('Speed Read Expect:', memory['speed'])
                 print('')
         else:
             time.sleep(1)

@@ -133,7 +133,10 @@ def amendPath(helper):
     # Find the lowest set of points in the approximation
     ys=approx[:,:,1].reshape((approx.shape[0]))
     mins=ys.argsort()[-2:]
-    minpts=approx[mins,:,:].reshape((2,2))
+    try:
+       minpts=approx[mins,:,:].reshape((2,2))
+    except Exception:
+       return False
     xs=minpts[:,0].reshape((minpts.shape[0]))
     mins=xs.argsort()
     minpts=minpts[mins]
@@ -146,8 +149,8 @@ def amendPath(helper):
         bluepair=find_overlaps(np.array([minpts[0]]),blue_contours)[0]
     bluedist=np.linalg.norm(bluepair[0]-bluepair[1])
     blueresult=((bluepair[0]+bluepair[1])/2).astype(int)
-    if not yellow_contours is None:
-        yellopair=[minpts[1],np.array((0,minpts[1][1]))]
+    if yellow_contours is None:
+        yellopair=[minpts[1],np.array((hsv.shape[1],minpts[1][1]))]
     else:
         yellopair=find_overlaps(np.array([minpts[1]]),yellow_contours)[0]
     yellowdist=np.linalg.norm(yellopair[0]-yellopair[1])

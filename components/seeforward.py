@@ -48,7 +48,7 @@ def start():
         color_image = np.asanyarray(color_frame.get_data())
 
         #Applies a blur to the image, probs should change this to use c2 at some point
-        color_image = cv2.blur(color_image,(3,3))
+        #color_image = cv2.blur(color_image,(3,3))
         
         #Creates a copy of the color image, which we draw a bunch of stuff on. 
         c2 = color_image.copy()
