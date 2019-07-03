@@ -16,4 +16,4 @@ def beware(helper,memory):
    if memory['reverse']<-7:
         memory['reverse']=10
    memory['angle']=90
-   memory['speed']=1350
+   memory['speed']=1560

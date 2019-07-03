@@ -25,7 +25,7 @@ memory['itercount']=0
 
 # Debug stuff
 memory['debug'] = True
-memory['record'] = False
+memory['record'] = True
 
 # For arduino thread
 memory['angle'] = 90
