@@ -28,7 +28,7 @@ memory['totfps']=0
 memory['itercount']=0
 
 # Debug stuff
-memory['debug'] = True
+memory['debug'] = False
 memory['record'] = False
 
 # For arduino thread
@@ -86,7 +86,7 @@ def reciever(helper):
         memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
         #memory['speed'] = helper['speed']
     
-    green.check(helper, memory)
+    #green.check(helper, memory)
 
     # Drawing and recording
     if memory['debug']:
