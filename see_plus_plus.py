@@ -1,4 +1,4 @@
-import components.seeforward as camera
+import components.cameraPlayback as camera
 import components.localiser as localiser
 import components.obstacleDetector as obstacleDetector
 import components.actOnMux as actOn
@@ -11,7 +11,7 @@ import components.reverse as reverse
 import components.steer as steer
 import components.calculateAngle as calculateAngle
 import components.checkgreen as green
-import traceback, cv2, time, math
+import traceback, cv2, time, math, time
 import numpy as np
 from threading import Thread
 
@@ -19,6 +19,7 @@ memory = {}
 memory['reverse'] = 0
 memory['seen_green'] = False
 memory['green_timer'] = 0
+memory['start_time'] = None
 
 
 # FPS stuff
@@ -46,6 +47,9 @@ boost=60
 def reciever(helper):
     # General setup
     global memory
+    if memory['start_time'] == None:
+        memory['start_time'] = time.time()
+    
     helper['speed'] = 1560
     helper['angle'] = 90
     helper['debug'] = memory['debug']
@@ -84,9 +88,8 @@ def reciever(helper):
         # Sending stuff to arduino thread
         memory['angle'] = helper['angle']
         memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
-        #memory['speed'] = helper['speed']
-    
-    #green.check(helper, memory)
+        
+    green.check(helper, memory)
 
     # Drawing and recording
     if memory['debug']:
