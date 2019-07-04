@@ -9,7 +9,7 @@ def r(helper,memory):
       return True
    else:
       return False
-   return False;
+   return False
 
 def beware(helper,memory):
    memory['reverse']-=2
