@@ -13,7 +13,7 @@ def check(helper, memory):
     if time.time() - memory['start_time'] < 2:
         return
     
-    green_lower = (55, 40, 40)
+    green_lower = (55, 50, 90)
     green_upper = (80,255,255)
 
     green_hsv = helper['hsv'][int(helper['ourLocation'][1].astype(int)/10*4):,]
@@ -38,10 +38,14 @@ def check(helper, memory):
     else:
         if memory['seen_green'] and memory['green_timer'] == 0:
             memory['green_timer'] = time.time()
-        
         elif memory['seen_green'] and time.time() - memory['green_timer'] > 1:
             memory['running'] = False
-
+            print ("GREEN STOP")
+        elif memory['seen_green'] and time.time() - memory['green_timer'] > 0.5:
+            memory['speed'] = 1480
+            print ("GREEN brake")
+            return True
+    return False
 
 
 

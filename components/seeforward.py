@@ -1,3 +1,4 @@
+
 import pyrealsense2 as rs
 import numpy as np
 import cv2
@@ -54,7 +55,7 @@ def start(memory):
         c2 = color_image.copy()
 
         #Crops the top half of the image
-        c2 = c2[160:720, 0:1280]
+        c2 = c2[160:, 0:1280]
         helper={}
         helper['image']=c2
         func_to_send_to(helper)
