@@ -21,6 +21,7 @@ memory['seen_green'] = False
 memory['green_timer'] = 0
 memory['start_time'] = None
 
+
 # FPS stuff
 memory['time']=time.time()
 memory['minfps']=100
@@ -40,9 +41,9 @@ memory['running'] = True
 memory['true_stop'] = False
 
 
-base = 1570
-boost = 40
-start_boost = 1650
+base=1560
+boost=60
+
 def reciever(helper):
     # General setup
     global memory
@@ -86,13 +87,8 @@ def reciever(helper):
             calculateAngle.c(helper)
         # Sending stuff to arduino thread
         memory['angle'] = helper['angle']
-        if time.time() - memory['start_time'] < 0.5:
-            memory['speed'] = start_boost
-        else:
-            memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
-
-        #memory['speed'] = helper['
-    
+        memory['speed'] = (1-math.fabs(memory['angle']-90)/45.0)*boost+base
+        
     green.check(helper, memory)
 
     # Drawing and recording
@@ -110,7 +106,6 @@ def run():
 
     actOnProcess = Thread(target = actOn.move, args=(memory,))
     actOnProcess.start()
-    input('Press enter when ready: ')
 
     try:
         camera.start(memory)
@@ -134,6 +129,7 @@ def stop_thread(actOnProcess):
 if __name__ == '__main__':
     try:
         while not memory['true_stop']:
+           input('Press enter when ready: ')
            run()
            memory['speed']=1500
            memory['angle']=90
